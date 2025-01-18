@@ -10,8 +10,9 @@ Can use the product search
 ## Registered user
 
 Creates account to the service
-    - Can search
-    - has access to own accountpage where can:
+Can search
+has access to own accountpage where can:
+
        - change user icon, email etc.
        - set follow ups to certain products(eg.price changes or discounts)
        - handle petfood reminders to notify the suitable time to order more food
@@ -23,6 +24,7 @@ Creates account to the service
 Has user login fields which can be discarded if not wanting to register
 Quick search option
 button to access:
+
     other pages
     setting
     guides
@@ -33,6 +35,7 @@ Its function is to guide to the product search page.
 This is where the user adds parameters and makes the search
 Has search field
 Different switches, sliders and buttons for parameter:
+
     breed
     size / weight
     form of food
@@ -44,6 +47,7 @@ Different switches, sliders and buttons for parameter:
 ## Product list page
 Shows the corresponding products as a product cards.
 has buttons to access different filtering options:
+
     Common filters
     filter by reviews
     filter by price
@@ -51,6 +55,7 @@ has buttons to access different filtering options:
     filter by manufactor
 
 Each product card contains:
+
     name of the product
     main ingredients ( 5 most common)
     price range (varying between different retailers)
@@ -73,6 +78,7 @@ from this page user can click any of the resellers and is then redirected to res
 ## About us Page
 
 Contains:
+
     some background story
     contact details
     social media links
@@ -96,6 +102,7 @@ this page has more functionalities depending the user rights:
     
     Boss
         can see:
+
             products,
             registered users,
             retailers,
@@ -112,8 +119,22 @@ this page has more functionalities depending the user rights:
     - Typescript
     - Redux
 
+## How to manage the group work
 
+    Pre assigned entities which all include backend and frontend functionalities:
 
+        eg 1. Products and retailers
+        eg 2. Admin, boss and monitor pages
+        eg 3. Users and userpages
+
+    additionally styles, components, state handling etc. is planned and implemented partly together. Atleast centralized as much as possible.
+
+    Weekly planning:
+        
+        Trello cards to assing tasks
+        1 week cycle
+        Cards include used hours and author
+        Suggestions to new features
 
 
 
