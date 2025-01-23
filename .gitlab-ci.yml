@@ -31,6 +31,7 @@ create_production_merge_request:
           "title": "Merge staging into production",
           "description": "This MR was automatically created to merge staging changes into production."
         }' \
+        "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/merge_requests"
   only:
     - staging
 
