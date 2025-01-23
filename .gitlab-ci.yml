@@ -21,15 +21,16 @@ create_production_merge_request:
   script:
     - apk add --no-cache curl jq
     - |
-      curl --request POST --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" \
-      --header "Content-Type: application/json" \
-      --data '{
-        "source_branch": "staging",
-        "target_branch": "main",
-        "title": "Merge staging into production",
-        "description": "This MR was automatically created to merge staging changes into production."
-      }' \
-      "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/merge_requests" | jq .
+      curl -v \
+        --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+        --header "Content-Type: application/json" \
+        --request POST \
+        --data '{
+          "source_branch": "staging",
+          "target_branch": "main",
+          "title": "Merge staging into production",
+          "description": "This MR was automatically created to merge staging changes into production."
+        }' \
   only:
     - staging
 
