@@ -6,7 +6,7 @@ stages:
 deploy_to_staging:
   stage: deploy_staging
   tags:
-    - 869
+    - 869 (uCMx854i)
   script:
     - echo "Merged to staging branch"
     - echo "Place to add commands to deploy to production environment (can be done later)"
@@ -16,7 +16,7 @@ deploy_to_staging:
 create_production_merge_request:
   stage: create_production_mr
   tags:
-    - 869  
+    - 869 (uCMx854i)
   image: alpine:latest
   script:
     - apk add --no-cache curl jq
