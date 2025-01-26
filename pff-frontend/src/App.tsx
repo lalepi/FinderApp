@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import productsService from './services/Products'
+import { Product } from './types'
 
 function App() {
     const [productList, setProductList] = useState([])
@@ -8,7 +9,7 @@ function App() {
         productsService.getAll().then((products) => {
             console.log(products)
             setProductList(
-                products.map((product) => (
+                products.map((product: Product) => (
                     <div key={product.id}>
                         <h2>{product.name}</h2>
 
