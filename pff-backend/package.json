@@ -1,0 +1,32 @@
+{
+    "name": "pff-backend",
+    "version": "1.0.0",
+    "description": "backend functionality for Petfoodfinder application",
+    "type": "module",
+    "main": "src/index.ts",
+    "scripts": {
+        "start": "ts-node src/index.ts",
+        "tsc": "tsc",
+        "dev": "nodemon src/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint ."
+    },
+    "author": "lari leppänen, Almerek Kyrgyzbay, Nahid Islam",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.21.2"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.18.0",
+        "@stylistic/eslint-plugin-js": "^2.13.0",
+        "@types/node": "^22.10.10",
+        "eslint": "^9.18.0",
+        "eslint-plugin-react": "^7.37.4",
+        "globals": "^15.14.0",
+        "nodemon": "^3.1.9",
+        "prettier": "3.4.2",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.21.0"
+    }
+}
