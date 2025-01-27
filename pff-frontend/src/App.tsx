@@ -1,36 +1,24 @@
-import { useEffect, useState } from 'react'
-import productsService from './services/Products'
-import { Product } from './types'
+import ProductListPage from './components/Product'
+import AboutUsPage from './components/AboutUs'
+import AdminPage from './components/Admin'
+import MainPage from './components/MainPage'
 
-function App() {
-    const [productList, setProductList] = useState([])
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import NavigationBar from './components/NavigationBar'
 
-    useEffect(() => {
-        productsService.getAll().then((products) => {
-            console.log(products)
-            setProductList(
-                products.map((product: Product) => (
-                    <div key={product.id}>
-                        <h2>{product.name}</h2>
-
-                        <li>{product.size}</li>
-                        <li>{product.manufacturer}</li>
-                        <li>{product.ingredients}</li>
-                        <li>{product.age}</li>
-                    </div>
-                ))
-            )
-        })
-    }, [])
-
+const App = () => {
     return (
-        <>
+        <Router>
             <div>
-                <h1>PetFoodFinder</h1>
-                <h2>Products</h2>
-                {productList}
+                <NavigationBar />
+                <Routes>
+                    <Route path="/" element={<MainPage />} />
+                    <Route path="products" element={<ProductListPage />} />
+                    <Route path="aboutus" element={<AboutUsPage />} />
+                    <Route path="admin" element={<AdminPage />} />
+                </Routes>
             </div>
-        </>
+        </Router>
     )
 }
 
