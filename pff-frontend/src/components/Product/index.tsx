@@ -1,11 +1,20 @@
 import ProductList from './productList'
+import {
+    Root,
+    Header,
+    Content,
+    Footer,
+} from '../../themes/styles/CommonPageStyles'
 
 const ProductListPage = () => {
     return (
-        <div>
-            <h1>Welcome to ProductListPage</h1>
-            <ProductList />
-        </div>
+        <Root>
+            <Header>Product List</Header>
+            <Content>
+                <ProductList />
+            </Content>
+            <Footer>Footer Content</Footer>
+        </Root>
     )
 }
 
