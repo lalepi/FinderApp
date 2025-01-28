@@ -12,12 +12,16 @@ const Root = styled(Box)(({ theme }) => ({
 
 const Header = styled(Box)(({ theme }) => ({
     width: '100%',
-    padding: theme.spacing(2),
+    padding: theme.spacing(5),
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     textAlign: 'center',
-    fontSize: '1.5rem',
+    fontSize: '2.5rem',
     fontWeight: 'bold',
+    [theme.breakpoints.down('mobile')]: {
+        fontSize: '1.2rem',
+        padding: theme.spacing(1),
+    },
 }))
 
 const Content = styled(Box)(({ theme }) => ({

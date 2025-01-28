@@ -1,6 +1,20 @@
-import { createTheme } from '@mui/material/styles'
+import { createTheme, Theme } from '@mui/material/styles'
 
-const theme = createTheme({
+declare module '@mui/material/styles' {
+    interface BreakpointOverrides {
+        xs: false // removes the `xs` breakpoint
+        sm: false
+        md: false
+        lg: false
+        xl: false
+        mobile: true // adds the `mobile` breakpoint
+        tablet: true
+        laptop: true
+        desktop: true
+    }
+}
+
+const theme: Theme = createTheme({
     palette: {
         primary: {
             main: 'rgb(255, 255, 255)',
@@ -19,7 +33,6 @@ const theme = createTheme({
             secondary: 'rgb(0, 0, 0)',
         },
     },
-
     typography: {
         fontFamily: 'Inter, sans-serif',
         h1: {
@@ -33,6 +46,15 @@ const theme = createTheme({
     spacing: 8,
     shape: {
         borderRadius: 8,
+    },
+    //theme_module has the following breakpoints defined
+    breakpoints: {
+        values: {
+            mobile: 500,
+            tablet: 501,
+            laptop: 1024,
+            desktop: 1200,
+        },
     },
 })
 
