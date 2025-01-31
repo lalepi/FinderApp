@@ -1,15 +1,29 @@
+# Mock Up
+
+Here is wireframe of what the pages could look like in mobile environment
+
+![mainpage](images\mockup\Mainpage.png) ![mainpageSearch](images\mockup\Mainpage_search.png)![mainpageSearch-step2](images\mockup\Mainpage_search-step2.png)
+
+![Productlistpage](images\mockup\Productlistpage.png)
+![Productdetailspage](images\mockup\Productdetailspage.png)
+![Aboutuspage](images\mockup\AboutUsPage.png)
+
 # Features
 
 ## Main Page
+
 ### For Unregistered Users:
+
 - Prompt users with questions about their pet, including:
-    - Animal Type: (e.g., dog, cat)
-    - Weight: (to tailor product recommendations)
-    - Age: (to suggest age-appropriate food)
-    - Favorite products: pet's current food preferences 
+  - Animal Type: (e.g., dog, cat)
+  - Weight: (to tailor product recommendations)
+  - Age: (to suggest age-appropriate food)
+  - Favorite products: pet's current food preferences
 - Based on user responses, display a curated selection of pet food products that meet the specified criteria.
 - No history/preferences saved (maybe apart from cookies history)
+
 ### For Registered Users:
+
 - Bypass the initial questions during subsequent visits.
 - Automatically display a personalized product selection based on previously provided pet information (type, weight, age).
 - Allow users to update their pet information in their profile settings to refresh product recommendations.
@@ -18,37 +32,40 @@ Main page should include possibility to turn on/off maintenace alert in case the
 Core function of this Main Page is to guide user to the product search page.
 
 ## Product Pages:
+
 ### Product Search Page
+
 - Allow users to filter products based on various criteria:
-    - Animal Type: Filter by dog or cat food.
-    - Brand: Select preferred brands.
-    - Price Range: Set minimum and maximum price limits. Price per unit calculation included.
-    - Type of Food: Choose between dry, wet, or raw options.
-    - Nutritional Needs: Filter based on specific dietary requirements (e.g., grain-free, high protein).
-    - Product Size
-    - Country of origin
+  - Animal Type: Filter by dog or cat food.
+  - Brand: Select preferred brands.
+  - Price Range: Set minimum and maximum price limits. Price per unit calculation included.
+  - Type of Food: Choose between dry, wet, or raw options.
+  - Nutritional Needs: Filter based on specific dietary requirements (e.g., grain-free, high protein).
+  - Product Size
+  - Country of origin
 - Display filtered results dynamically as users adjust their selections.
 - Display eco-friendly and sustainability ratings to inform users about the environmental impact of their choices.
 - Every displayed product is clickable which leads to specific product page. This is where only clicked product is shown, but it lists all the retailers of the product
 
 ### Detailed Product Pages
+
 - Provide comprehensive information about each product:
-- Display all relevant properties 
+- Display all relevant properties
 - Show pricing details and available quantities.
-- Include user reviews and ratings with an option to leave feedback. (star ratings with possibility to attach photos). Reviews should include helpful vote system (possibility to vote like/dislike  for review)
+- Include user reviews and ratings with an option to leave feedback. (star ratings with possibility to attach photos). Reviews should include helpful vote system (possibility to vote like/dislike for review)
 - Present a list of resellers with direct purchase links and pricing for each option.
 - Highlight eco-friendly and sustainability ratings.
 
 - Pet food properties include:
-    - Brand information: The manufacturer of the pet food.
-    - Type: Classification of the food (e.g., dry, wet, raw).
-    - Target Animal: Specify which animals the food is suitable for (e.g., dogs, cats).
-    - Ingredients: List of components used in the product ().
-    - Nutritional Information: Detailed breakdown of nutrients, including protein, fat, fiber,Omega fatty acids and vitamins.
-    - Price: Current and historical retail price of the product.
-    - Available Quantities and sizes: Stock levels indicating how much is available for purchase.
-    - Reviews: User-generated feedback and ratings on the product.
-    - Product inventory available in different retailers stores
+  - Brand information: The manufacturer of the pet food.
+  - Type: Classification of the food (e.g., dry, wet, raw).
+  - Target Animal: Specify which animals the food is suitable for (e.g., dogs, cats).
+  - Ingredients: List of components used in the product ().
+  - Nutritional Information: Detailed breakdown of nutrients, including protein, fat, fiber,Omega fatty acids and vitamins.
+  - Price: Current and historical retail price of the product.
+  - Available Quantities and sizes: Stock levels indicating how much is available for purchase.
+  - Reviews: User-generated feedback and ratings on the product.
+  - Product inventory available in different retailers stores
 
 ### Analytics & Reporting Page (or simply - monitor page)
 
@@ -56,30 +73,31 @@ Core function of this Main Page is to guide user to the product search page.
 
 Depending on the role, page is different for every player:
 User:
+
 - Product popularity metrics
 - Search trend analysis
 - Price trend analysis
 - Brand performance metrics
 
-Admin
-    - can see all that user sees and handle the registration of the retailers.
+Admin - can see all that user sees and handle the registration of the retailers.
 
-Retailer
-    - can can see all that user sees, but only for their own products and data about them
+Retailer - can can see all that user sees, but only for their own products and data about them
 
 Manager
-    can see:
-        all that user sees +
-        products,
-        registered users,
-        user behavior tracking metrics,
-        review analytics
-        retailers,
-        How many times links have been clicked (affliate revenue?),
-        best products (most clicked)
+can see:
+all that user sees +
+products,
+registered users,
+user behavior tracking metrics,
+review analytics
+retailers,
+How many times links have been clicked (affliate revenue?),
+best products (most clicked)
 
 ### Educational Content Page (blogs and newsletter)
+
 Contains blogs and articles from different personas on:
+
 - Ingredient glossary
 - Nutritional guidelines
 - Pet food selection guides
@@ -90,14 +108,18 @@ Contains blogs and articles from different personas on:
 - Pet Owners reflections and experiences with pet food
 
 ### About Us Page
+
 Contains:
+
 - some background story about the project
 - contact details
 - social media links
 - etc.
 
-## User 
+## User
+
 ### Can:
+
 - Register and unregister (removes all user data)
 - Update own data (name, email, address, icon, pet information)
 - See list of available pet food products
@@ -120,23 +142,24 @@ Contains:
 - View personal spending dashboard and nutritional trends
 - Create and maintain own "wish list" with products they want to buy
 
-
 ## Reseller
+
 ### Can
+
 - Integrate API to synchronize:
-    - Current product catalog
-    - Real-time pricing
-    - Product availability
+  - Current product catalog
+  - Real-time pricing
+  - Product availability
 - Automatically update product information
 - Manage their product listings
 - List near-expiry or surplus pet food for rescue program
 - View sales analytics and market trends for their products
 - Activate own brand promotion (ads) inside the app
 
-
-
 ## Manager
+
 ### Can
+
 - Perform all functionalities of a Seller
 - Approve/reject new seller applications
 - View overall marketplace statistics
@@ -148,17 +171,18 @@ Contains:
 - Monitor environmental impact metrics
 - Track impact of rescued food (waste reduction, donations)
 
-
 ## Admin
+
 ### Can
+
 - Perform all functionalities of a Manager
 - Add/remove Managers
 - Access and modify all system data
 - Reset the entire system (with caution)
 - View system-wide analytics and performance metrics
 
-
 # Core Requirements (Grade 3)
+
 - User can register/unregister to system.
 - User can update own data.
 - User can see list of available pet food products.
@@ -175,6 +199,7 @@ Contains:
 - Admin can add/remove Managers.
 
 # Extra Requirements (Grade 4-5)
+
 - User can write reviews for purchased products.
 - User can view browsing history (which products they browsed).
 - User can set and receive price alert notifications.
@@ -187,19 +212,3 @@ Contains:
 - Use JWT for access token implementation.
 - Implement pet food donation platform.
 - Generate environmental impact reports
-
-# How we plan to manage our mini-group (3 personas) work
-Pre assigned entities which all include backend and frontend functionalities:
-
-    eg 1. Products and retailers
-    eg 2. Admin, boss and monitor pages
-    eg 3. Users and userpages
-
-Additionally styles, components, state handling etc. is planned and implemented partly together. Atleast centralized as much as possible.
-
-Weekly planning:
-    
-    Trello cards to assing tasks
-    1 week cycle
-    Cards include used hours and author
-    Suggestions to new features
