@@ -6,7 +6,7 @@ Here is wireframe of what the pages could look like in mobile environment
 
 ![Productlistpage](images\mockup\Productlistpage.png)
 ![Productdetailspage](images\mockup\Productdetailspage.png)
-![Aboutuspage](images\mockup\AboutUsPage.png)
+![Aboutuspage](images\AboutUsPage.jpg)
 
 # Features
 
