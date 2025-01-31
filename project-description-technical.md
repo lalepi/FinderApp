@@ -4,53 +4,19 @@
 
 Build with Vite
 
-# Framework
-
-React
-
-# Type definitions
-
-typescript
-
-# Routing
-
-axios
-react-router-dom
-
-# Styling
-
-Material UI
-Eslint
-Prettier
-
-# Packages to aid Development
-
-json-server
+Framework: React
+Type definitions: Typescript
+Routing: axios, react-router-dom
+Styling: Material UI
+Linting: Eslint
+Packages to aid development:Prettier, json-server 
 
 # Backend
 
-# Runtime environment
+Runtime environment: Node.js
+Framework: express
+Type definitions: Typescript
+Linting: Eslint
+Packages to aid development:Prettier, nodemon 
 
-Node.js
-
-# Framework
-
-express
-
-# Type definitions
-
-typescript
-
-# Styling
-
-Eslint
-Prettier
-
-# Packages to aid Development
-
-json-server
-nodemon
-
-# Database
-
-MongoDB
+Database: MongoDB
