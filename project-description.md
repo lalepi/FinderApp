@@ -2,11 +2,33 @@
 
 Here is wireframe of what the pages could look like in mobile environment
 
-![mainpage](images\mockup\Mainpage.png) ![mainpageSearch](images\mockup\Mainpage_search.png)![mainpageSearch-step2](images\mockup\Mainpage_search-step2.png)
+<table>
+  <tr>
+    <td>Main Page</td>
+     <td>Main Page Search</td>
+     <td>Main Page Search 2</td>
+  </tr>
+  <tr>
+    <td><img src="images/mockup/Mainpage.png" width=270 height=480></td>
+    <td><img src="images/mockup/Mainpage_search.png" width=270 height=480></td>
+    <td><img src="images/mockup/Mainpage_search-step2.png" width=270 height=480></td>
+    
+  </tr>
+ </table>
+ <table>
+  <tr>
+    <td>ProductList page</td>
+     <td>Product details page</td>
+     <td>About us page</td>
+  </tr>
+  <tr>
+    <td><img src="images/mockup/Productlistpage.png" width=270 height=480></td>
+    <td><img src="images/mockup/Productdetailspage.png" width=270 height=480></td>
+    <td><img src="images/mockup/AboutUsPage.png" width=270 height=480></td>
+    
+  </tr>
+ </table>
 
-![Productlistpage](images\mockup\Productlistpage.png)
-![Productdetailspage](images\mockup\Productdetailspage.png)
-![Aboutuspage](images\AboutUsPage.jpg)
 
 # Features
 
