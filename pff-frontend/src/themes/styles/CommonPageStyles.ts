@@ -11,13 +11,13 @@ const Root = styled(Box)(({ theme }) => ({
 }))
 
 const Header = styled(Box)(({ theme }) => ({
-    width: '100%',
     padding: theme.spacing(5),
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+
+    color: theme.palette.text.primary,
     textAlign: 'center',
     fontSize: '2.5rem',
     fontWeight: 'bold',
+
     [theme.breakpoints.down('mobile')]: {
         fontSize: '1.2rem',
         padding: theme.spacing(1),
@@ -40,4 +40,12 @@ const Footer = styled(Box)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     textAlign: 'center',
 }))
-export { Root, Header, Content, Footer }
+
+const Text = styled('p')(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: '1rem',
+    textAlign: 'center',
+    margin: theme.spacing(2),
+}))
+
+export { Root, Header, Content, Footer, Text }

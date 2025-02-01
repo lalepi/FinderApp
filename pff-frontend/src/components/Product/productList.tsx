@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import productsService from '../../services/Products'
+import productsService from '../../services/product'
 import { Product } from '../../types'
 
 const ProductList = () => {

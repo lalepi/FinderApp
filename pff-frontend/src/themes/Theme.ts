@@ -1,5 +1,15 @@
 import { createTheme, Theme } from '@mui/material/styles'
 
+declare module '@mui/material/styles/createPalette' {
+    interface PaletteOptions {
+        button?: {
+            primaryBackground?: string
+            primaryText?: string
+            secondaryBackground?: string
+            secondaryText?: string
+        }
+    }
+}
 declare module '@mui/material/styles' {
     interface BreakpointOverrides {
         xs: false // removes the `xs` breakpoint
@@ -32,7 +42,12 @@ const theme: Theme = createTheme({
             primary: 'rgb(71, 109, 54)',
             secondary: 'rgb(0, 0, 0)',
         },
+        button: {
+            primaryBackground: 'rgb(30, 68, 13)',
+            primaryText: 'rgb(255, 255, 255)',
+        },
     },
+
     typography: {
         fontFamily: 'Inter, sans-serif',
         h1: {
