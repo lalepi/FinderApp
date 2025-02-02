@@ -4,6 +4,10 @@ import { TextField, Box, Stack } from '@mui/material'
 import LoginButton from '../../themes/styles/Buttons'
 import { Link } from 'react-router-dom'
 import theme from '../../themes/Theme'
+import { credentials } from '../../types'
+import { useAppDispatch } from '../../store'
+import { createUser } from '../../reducers/loginReducer'
+
 const SignUp = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -11,9 +15,19 @@ const SignUp = () => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
+        Register({ email, password })
         console.log('Email:', email)
         console.log('password:', password)
         console.log('confirmPassword:', confirmPassword)
+
+        setEmail('')
+        setPassword('')
+    }
+
+    const dispatch = useAppDispatch()
+
+    const Register = async (credentials: credentials) => {
+        dispatch(createUser(credentials))
     }
 
     return (

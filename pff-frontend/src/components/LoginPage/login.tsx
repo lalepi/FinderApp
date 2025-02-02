@@ -4,15 +4,27 @@ import { TextField, Box, useMediaQuery } from '@mui/material'
 import LoginButton from '../../themes/styles/Buttons'
 import { Link } from 'react-router-dom'
 import theme from '../../themes/Theme'
+import { credentials } from '../../types'
+import { useAppDispatch } from '../../store'
+import { setUser } from '../../reducers/loginReducer'
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const isMobile = useMediaQuery(theme.breakpoints.down('mobile'))
+    const dispatch = useAppDispatch()
+
+    const Login = async (credentials: credentials) => {
+        dispatch(setUser(credentials))
+    }
+
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
+        Login({ email, password })
         console.log('Email:', email)
         console.log('Password:', password)
+        setEmail('')
+        setPassword('')
     }
 
     return (
