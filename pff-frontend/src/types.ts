@@ -1,3 +1,13 @@
+export interface User {
+    id: string
+    email: string
+    password: string
+}
+
+export type credentials = {
+    email: string
+    password: string
+}
 //if we have a type that is used in multiple places, we can define it here and import it where needed
 
 // if the type has known set of values, we can use an enum. This is useful for dropdowns, radio buttons, etc.

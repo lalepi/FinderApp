@@ -1,4 +1,57 @@
 {
+    "users": [
+        {
+            "id": 1,
+            "username": "admin",
+            "password": "admin",
+            "role": "admin"
+        },
+        {
+            "id": "eca2",
+            "email": "fsasf",
+            "password": "ssfsaf"
+        },
+        {
+            "id": "d926",
+            "email": "testiä vvaa",
+            "password": "safssssfsaf"
+        },
+        {
+            "id": "4475",
+            "email": "fsafsaf",
+            "password": "safsafsa"
+        },
+        {
+            "id": "c773",
+            "email": "testiboi",
+            "password": "testi"
+        },
+        {
+            "id": "22cc",
+            "email": "asfdsafsafsa",
+            "password": "safsaf"
+        },
+        {
+            "id": "3327",
+            "email": "cc",
+            "password": "sfasf"
+        },
+        {
+            "id": "aa93",
+            "email": "asdasdsad",
+            "password": "sdaasd"
+        },
+        {
+            "id": "9be2",
+            "email": "safasfsaf",
+            "password": "safasf"
+        },
+        {
+            "id": "4643",
+            "email": "sfsafasf",
+            "password": "safsafsaf"
+        }
+    ],
     "products": [
         {
             "id": 1,

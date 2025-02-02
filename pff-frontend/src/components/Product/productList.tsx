@@ -1,28 +1,25 @@
-import { useEffect, useState } from 'react'
-import productsService from '../../services/Products'
 import { Product } from '../../types'
+import { useAppSelector } from '../../store'
+import { Box } from '@mui/system'
 
 const ProductList = () => {
-    const [products, setProductsList] = useState([])
+    const products = useAppSelector((state) => state.product)
 
-    useEffect(() => {
-        productsService.getAll().then((products) => {
-            console.log(products)
-            setProductsList(
-                products.map((product: Product) => (
-                    <div key={product.id}>
-                        <h2>{product.name}</h2>
-                        <li>{product.size}</li>
-                        <li>{product.manufacturer}</li>
-                        <li>{product.ingredients}</li>
-                        <li>{product.age}</li>
-                    </div>
-                ))
-            )
-        })
-    }, [])
+    console.log('products', products)
 
-    return <div>{products}</div>
+    return (
+        <Box>
+            {products.map((product: Product) => (
+                <div key={product.id}>
+                    <h2>{product.name}</h2>
+                    <li>{product.size}</li>
+                    <li>{product.manufacturer}</li>
+                    <li>{product.ingredients}</li>
+                    <li>{product.age}</li>
+                </div>
+            ))}
+        </Box>
+    )
 }
 
 export default ProductList

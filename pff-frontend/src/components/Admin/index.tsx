@@ -1,9 +1,12 @@
+import UserList from './users'
+import { Content } from '../../themes/styles/CommonPageStyles'
+
 const AdminPage = () => {
     return (
-        <div>
+        <Content>
             <h1>Welcome to Admin page</h1>
-            {/* Add your Admin page content here */}
-        </div>
+            <UserList />
+        </Content>
     )
 }
 export default AdminPage
