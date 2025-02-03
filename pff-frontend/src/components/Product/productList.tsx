@@ -14,6 +14,12 @@ const ProductList = () => {
                     <h2>{product.name}</h2>
                     <li>{product.size}</li>
                     <li>{product.manufacturer}</li>
+                    <img
+                        src={`/testdata/assets/${product.image}`}
+                        alt={product.name}
+                        width="100"
+                        height="100"
+                    />
                     <li>{product.ingredients}</li>
                     <li>{product.age}</li>
                 </div>

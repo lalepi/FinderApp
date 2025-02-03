@@ -26,8 +26,11 @@ export interface Product {
     name: string
     manufacturer: string
     ingredients: Array<string>
+    image_url: string
     size: string
     age: Age
+    image: string
+
     reviews: Array<object>
 }
 
