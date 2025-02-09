@@ -1,6 +1,16 @@
 import { createTheme, Theme } from '@mui/material/styles'
+import '@mui/material/styles/createPalette'
+import { Colors } from '../constants'
 
 declare module '@mui/material/styles/createPalette' {
+    interface Palette {
+        button: {
+            primaryBackground: string
+            primaryText: string
+            secondaryBackground: string
+            secondaryText: string
+        }
+    }
     interface PaletteOptions {
         button?: {
             primaryBackground?: string
@@ -27,24 +37,26 @@ declare module '@mui/material/styles' {
 const theme: Theme = createTheme({
     palette: {
         primary: {
-            main: 'rgb(255, 255, 255)',
-            contrastText: 'rgb(0, 0, 0)',
+            main: Colors.light.main,
+            contrastText: Colors.dark.main,
         },
         secondary: {
-            main: 'rgb(255, 255, 255)',
-            contrastText: 'rgb(85, 160, 88)',
+            main: Colors.light.secondary,
+            contrastText: Colors.darkGreen.main,
         },
         background: {
-            default: 'rgb(255, 255, 255)',
-            paper: 'rgb(255, 255, 255)',
+            default: Colors.light.transparency.secondary[90],
+            paper: Colors.light.transparency.main[90],
         },
         text: {
-            primary: 'rgb(71, 109, 54)',
-            secondary: 'rgb(0, 0, 0)',
+            primary: Colors.darkGreen.main,
+            secondary: Colors.gray.main,
         },
         button: {
-            primaryBackground: 'rgb(30, 68, 13)',
-            primaryText: 'rgb(255, 255, 255)',
+            primaryBackground: Colors.darkGreen.main,
+            primaryText: Colors.light.main,
+            secondaryBackground: Colors.darkGreen.transparency.main[80],
+            secondaryText: Colors.light.main,
         },
     },
 

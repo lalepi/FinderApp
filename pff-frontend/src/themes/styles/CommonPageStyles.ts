@@ -43,9 +43,21 @@ const Footer = styled(Box)(({ theme }) => ({
 
 const Text = styled('p')(({ theme }) => ({
     color: theme.palette.text.primary,
-    fontSize: '1rem',
-    textAlign: 'center',
-    margin: theme.spacing(2),
+    fontSize: 14,
+    textAlign: 'left',
+    fontWeight: 'bold',
+    display: 'inline',
+    //margin: theme.spacing(1),
+    gutterBottom: true,
 }))
 
-export { Root, Header, Content, Footer, Text }
+const FilterHeader = styled('p')(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: 16,
+    textAlign: 'left',
+    fontWeight: 'bold',
+    //margin: theme.spacing(1),
+    gutterBottom: true,
+}))
+
+export { Root, Header, Content, Footer, Text, FilterHeader }

@@ -40,3 +40,17 @@ export type NewProduct = Omit<Product, 'id'> //this is a type that is the same a
 export interface ProductWithRating extends Product {
     rating: number
 }
+
+///FILTERS///
+
+export type Breed = 'dog' | 'cat' | 'neither'
+
+export interface MultiCheckboxProps {
+    values: string[]
+    label: string
+}
+
+export interface DropdownProps {
+    values: string[]
+    label: string
+}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Header, Root, Text } from '../../themes/styles/CommonPageStyles'
 import { TextField, Box, Stack } from '@mui/material'
-import LoginButton from '../../themes/styles/Buttons'
+import { LoginButton } from '../../themes/styles/Buttons'
 import { Link } from 'react-router-dom'
 import theme from '../../themes/Theme'
 import { credentials } from '../../types'
