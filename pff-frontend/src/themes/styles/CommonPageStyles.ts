@@ -11,7 +11,7 @@ const Root = styled(Box)(({ theme }) => ({
 }))
 
 const Header = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(5),
+    padding: theme.spacing(2),
 
     color: theme.palette.text.primary,
     textAlign: 'center',

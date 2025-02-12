@@ -34,6 +34,16 @@ export interface Product {
     reviews: Array<object>
 }
 
+export interface ProductWithMetadata extends Product {
+    product_metadata: {
+        brand: string
+        dietary_type: string
+        pet_size: string
+        pet_type: string
+        product_id: string
+    }
+}
+
 export type NewProduct = Omit<Product, 'id'> //this is a type that is the same as Product, but without the id field
 
 //to extend a type, we can use the extends keyword

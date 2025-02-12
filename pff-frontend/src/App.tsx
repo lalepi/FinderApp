@@ -1,4 +1,4 @@
-import ProductListPage from './components/Product'
+import ProductListPage from './components/ProductList'
 import AboutUsPage from './components/AboutUs'
 import AdminPage from './components/Admin'
 import MainPage from './components/MainPage'
@@ -12,6 +12,7 @@ import { useAppDispatch } from './store'
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import NavigationBar from './components/NavigationBar'
+import SingleProductPage from './components/SingleProduct'
 
 const App = () => {
     const dispatch = useAppDispatch()
@@ -32,6 +33,10 @@ const App = () => {
                     <Route path="aboutus" element={<AboutUsPage />} />
                     <Route path="admin" element={<AdminPage />} />
                     <Route path="register" element={<SignUpPage />} />
+                    <Route
+                        path="products/:id"
+                        element={<SingleProductPage />}
+                    />
                 </Routes>
             </div>
         </Router>
