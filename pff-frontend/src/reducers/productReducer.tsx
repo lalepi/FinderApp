@@ -19,7 +19,7 @@ export const { setProducts } = productSlice.actions
 
 export const initializeProducts = () => {
     return async (dispatch: AppDispatch) => {
-        const products = await productService.getAll()
+        const products = await productService.getAllProducts()
         dispatch(setProducts(products))
     }
 }

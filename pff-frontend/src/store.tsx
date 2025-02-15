@@ -3,12 +3,14 @@ import loginReducer from './reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import productReducer from './reducers/productReducer'
 import userReducer from './reducers/userReducer'
+import resellerReducer from './reducers/resellerReducer'
 
 const store = configureStore({
     reducer: {
         login: loginReducer,
         product: productReducer,
         user: userReducer,
+        reseller: resellerReducer,
     },
 })
 

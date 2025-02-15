@@ -32,7 +32,31 @@ class AdvancedResellersDataSimulator:
             {"name": "Zooplus", "type": "Online", "regions": ["National"]},
             {"name": "Puuilo", "type": "Brick & Mortar", "regions": ["Skandinavia", "Local", "National"]},
             {"name": "Bitiba", "type": "Multimarket", "regions": ["National"]},
-            {"name": "Prisma", "type": "Independent", "regions": ["Local"]}
+            {"name": "Prisma", "type": "Independent", "regions": ["Local"]},
+             {"name": "PetSmart", "type": "Brick & Mortar", "regions": ["International"]},
+            {"name": "Petco", "type": "Brick & Mortar", "regions": ["International"]},
+            {"name": "Chewy", "type": "Online", "regions": ["International"]},
+            {"name": "Amazon", "type": "Online", "regions": ["Skandinavia"]},
+            {"name": "Walmart", "type": "Multimarket", "regions": ["International"]},
+            {"name": "Target", "type": "Multimarket", "regions": ["Skandinavia"]},
+            {"name": "Costco", "type": "Brick & Mortar", "regions": ["Local"]},
+            {"name": "Sam's Club", "type": "Brick & Mortar", "regions": ["Skandinavia"]},
+            {"name": "BJ's Wholesale Club", "type": "Brick & Mortar", "regions": ["International"]},
+            {"name": "Pet Supplies Plus", "type": "Brick & Mortar", "regions": ["Local"]},
+            {"name": "Pet Valu", "type": "Brick & Mortar", "regions": ["National"]},
+            {"name": "Pet Supermarket", "type": "Brick & Mortar", "regions": ["National"]},
+            {"name": "Petland", "type": "Brick & Mortar", "regions": ["Local"]},
+            {"name": "PetFlow", "type": "Online", "regions": ["National"]},
+               {"name": "Pet World", "type": "Brick & Mortar", "regions": ["Local"]},
+            {"name": "Pet Planet", "type": "Online", "regions": ["National"]},
+            {"name": "Pet Universe", "type": "Multimarket", "regions": ["International"]},
+            {"name": "Pet Galaxy", "type": "Brick & Mortar", "regions": ["National"]},
+            {"name": "Pet Kingdom", "type": "Online", "regions": ["International"]},
+            {"name": "Pet Empire", "type": "Multimarket", "regions": ["Skandinavia"]},
+            {"name": "Pet Haven", "type": "Brick & Mortar", "regions": ["Local"]},
+            {"name": "Pet Paradise", "type": "Online", "regions": ["National"]},
+            {"name": "Pet Oasis", "type": "Multimarket", "regions": ["International"]},
+            {"name": "Pet Haven", "type": "Brick & Mortar", "regions": ["Local"]}
         ]
 
         # List of pet food brands
@@ -125,7 +149,9 @@ class AdvancedResellersDataSimulator:
     # Method to generate reseller inventory
     def generate_reseller_inventory(self, product_metadata):
         inventory_data = []
-        for reseller in self.resellers:
+         # Randomly select 1-20 resellers for each product
+        selected_resellers = random.sample(self.resellers, random.randint(1, 20))
+        for reseller in selected_resellers:
             # Complex inventory simulation
             stock_levels = {
                 "Brick & Mortar": (50, 500),

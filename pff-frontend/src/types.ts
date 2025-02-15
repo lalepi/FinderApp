@@ -22,7 +22,7 @@ export enum Age {
 //example of a type definition for a product
 
 export interface Product {
-    id: number
+    id: string
     name: string
     manufacturer: string
     ingredients: Array<string>
@@ -42,6 +42,26 @@ export interface ProductWithMetadata extends Product {
         pet_type: string
         product_id: string
     }
+}
+
+export enum Regions {
+    Skandinavia = 'Skandinavia',
+    Local = 'Local',
+    National = 'National',
+}
+
+export interface Reseller {
+    inventory_id: string
+    product_id: string
+    reseller_name: string
+    regions: Regions
+    stock_quantity: number
+    base_price: number
+    sale_price: number
+    pricing_strategy: string
+    inventory_status: string
+    last_updated: string
+    id: string
 }
 
 export type NewProduct = Omit<Product, 'id'> //this is a type that is the same as Product, but without the id field

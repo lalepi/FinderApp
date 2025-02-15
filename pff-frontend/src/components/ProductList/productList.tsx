@@ -18,9 +18,10 @@ import {
     DropDownSelector,
     MultiCheckboxSelector,
 } from '../inputs/filterInputs'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 // Define the ProductCard component which takes a product with metadata as a prop
 const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
+    const navigate = useNavigate()
     // Filter ingredients based on specific keywords
     const filteredIngredients = product.ingredients.filter((ingredient) => {
         return (
@@ -37,7 +38,9 @@ const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
         )
     })
 
-    console.log('filteredIngredients', filteredIngredients)
+    const handleCardClick = () => {
+        navigate(`/products/${product.id}`, { state: { product } })
+    }
 
     return (
         <Card
@@ -50,7 +53,7 @@ const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
                 boxShadow: 10,
             }}
         >
-            <CardActionArea component={Link} to={`/products/${product.id}`}>
+            <CardActionArea onClick={handleCardClick}>
                 {/* Upper part of the card */}
                 <CardContent sx={{ paddingBottom: 0, paddingTop: 0 }}>
                     <Header

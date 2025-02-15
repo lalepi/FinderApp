@@ -13,6 +13,7 @@ import { useAppDispatch } from './store'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import NavigationBar from './components/NavigationBar'
 import SingleProductPage from './components/SingleProduct'
+import { initializeResellers } from './reducers/resellerReducer'
 
 const App = () => {
     const dispatch = useAppDispatch()
@@ -20,6 +21,7 @@ const App = () => {
     useEffect(() => {
         dispatch(initializeProducts())
         dispatch(initializeUsers())
+        dispatch(initializeResellers())
     }, [])
 
     return (
