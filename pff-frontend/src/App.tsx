@@ -22,7 +22,7 @@ const App = () => {
         dispatch(initializeProducts())
         dispatch(initializeUsers())
         dispatch(initializeResellers())
-    }, [])
+    }, [dispatch])
 
     return (
         <Router>

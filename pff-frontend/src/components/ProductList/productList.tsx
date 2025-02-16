@@ -19,10 +19,12 @@ import {
     MultiCheckboxSelector,
 } from '../inputs/filterInputs'
 import { useNavigate } from 'react-router-dom'
+import { AverageRating } from '../Reviews'
 // Define the ProductCard component which takes a product with metadata as a prop
 const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
     const navigate = useNavigate()
     // Filter ingredients based on specific keywords
+    console.log('productList', product)
     const filteredIngredients = product.ingredients.filter((ingredient) => {
         return (
             ingredient.toLowerCase().includes('chicken') ||
@@ -104,11 +106,14 @@ const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
                         <Box
                             sx={{
                                 display: 'flex',
+                                flexDirection: 'column',
                                 justifyContent: 'center',
-                                alignItems: 'top',
+                                alignItems: 'center',
                                 width: '50%',
                             }}
                         >
+                            <AverageRating product={product} />
+
                             <img
                                 src={`/testdata/assets/${product.image}`}
                                 alt={product.name}

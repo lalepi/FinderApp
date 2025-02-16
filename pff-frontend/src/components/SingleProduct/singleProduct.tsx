@@ -1,22 +1,59 @@
-import { useLocation } from 'react-router-dom'
-import { ProductWithMetadata, Reseller } from '../../types'
+import { Reseller, ProductWithMetadata } from '../../types'
 import { Box, List, ListItem } from '@mui/material'
 import { Header, Text } from '../../themes/styles/CommonPageStyles'
 import { useAppSelector } from '../../store'
-import Reviews from '../Reviews'
+import { AddReview, Reviews } from '../Reviews'
+import { useState, useEffect } from 'react'
+import { Review } from '../../types'
+import { fetchProductById } from '../../reducers/productReducer'
+import { useAppDispatch } from '../../store'
+import { useParams } from 'react-router-dom'
 const SingleProduct = () => {
-    const location = useLocation()
-    const { product } = location.state as { product: ProductWithMetadata }
-    console.log('product', product)
+    const { id } = useParams<{ id: string }>()
+
+    const dispatch = useAppDispatch()
+
+    const product = useAppSelector((state) =>
+        state.product.find((product) => product.id === id)
+    ) as ProductWithMetadata | undefined
+
+    // State to manage reviews
+    const [reviews, setReviews] = useState<Review[]>(product?.reviews || [])
+    const [loading, setLoading] = useState<boolean>(true)
+    useEffect(() => {
+        const fetchProduct = async () => {
+            if (!product && id) {
+                await dispatch(fetchProductById(id))
+            }
+            setLoading(false)
+        }
+        fetchProduct()
+    }, [dispatch, id, product])
+
+    useEffect(() => {
+        if (product) {
+            setReviews(product.reviews)
+        }
+    }, [product])
 
     const resellers = useAppSelector((state) => state.reseller)
 
     // Filter resellers by product ID
     const productResellers = resellers.filter(
-        (reseller: Reseller) => reseller.product_id === product.id
+        (reseller: Reseller) => reseller.product_id === id
     )
 
-    console.log('productResellers', productResellers)
+    // Function to handle adding a new review
+    const handleAddReview = (newReview: Review) => {
+        setReviews([...reviews, newReview])
+    }
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
+    if (!product) {
+        return <div>Product not found</div>
+    }
     return (
         <Box sx={{ padding: 2 }}>
             <Header>
@@ -126,7 +163,8 @@ const SingleProduct = () => {
                     </List>
                 </Box>
             </Box>
-            <Reviews product={product} />
+            <AddReview product={product} onAddReview={handleAddReview} />
+            <Reviews product={{ ...product, reviews }} />
         </Box>
     )
 }

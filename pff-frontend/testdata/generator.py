@@ -140,6 +140,7 @@ class AdvancedResellersDataSimulator:
             "image": random.choice(self.image_filenames), # Generate a random image
             "reviews": [
                 {
+                    "id": str(uuid.uuid4()),  # Add unique ID to each review
                     "rating": random.randint(1, 5),
                     "comment": self.fake.sentence()
                 } for _ in range(random.randint(1, 5))

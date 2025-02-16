@@ -49,6 +49,7 @@ const SingleProductPage = () => {
                 </Button>
                 <SingleProduct />
             </Content>
+
             <Footer>Footer Content</Footer>
         </Root>
     )

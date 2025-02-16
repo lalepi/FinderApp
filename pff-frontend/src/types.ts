@@ -31,7 +31,7 @@ export interface Product {
     age: Age
     image: string
 
-    reviews: Array<object>
+    reviews: Review[]
 }
 
 export interface ProductWithMetadata extends Product {
@@ -83,4 +83,13 @@ export interface MultiCheckboxProps {
 export interface DropdownProps {
     values: string[]
     label: string
+}
+
+export interface ReviewsProps {
+    product: ProductWithMetadata
+}
+
+export interface Review {
+    rating: number
+    comment: string
 }
