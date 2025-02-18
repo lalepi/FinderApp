@@ -11,17 +11,23 @@ export const AddReview: React.FC<{
     product: Product
     onAddReview: (review: Review) => void
 }> = ({ onAddReview, product }) => {
+    //manage the rating and comment state
     const [rating, setRating] = useState<number | null>(0)
     const [comment, setComment] = useState<string>('')
 
     const dispatch = useAppDispatch()
 
+    // Function to handle form submission
     const handleSubmit = async () => {
         //check that input is not empty
         if (rating !== null && comment.trim() !== '') {
-            const newReview = { id: uuidv4(), rating, comment }
+            // Create a new review object with a unique ID, rating, and comment
+            const newReview: Review = { id: uuidv4(), rating, comment }
+            // Dispatch the addReview action to add the new review to the Redux store
             dispatch(addReview(product.id, newReview))
+            // Call the onAddReview callback function with the new review
             onAddReview(newReview)
+            // Reset the rating and comment input fields
             setRating(0)
             setComment('')
         }
@@ -63,8 +69,6 @@ export const AverageRating: React.FC<ReviewsProps> = ({ product }) => {
     const rating =
         productReview.reduce((acc, review) => acc + review.rating, 0) /
         productReview.length
-
-    console.log('rating', rating)
     return (
         <Box
             sx={{
@@ -92,8 +96,6 @@ export const AverageRating: React.FC<ReviewsProps> = ({ product }) => {
 }
 
 export const Reviews: React.FC<ReviewsProps> = ({ product }) => {
-    console.log('product', product)
-
     const productReview = product.reviews as Review[]
 
     return (

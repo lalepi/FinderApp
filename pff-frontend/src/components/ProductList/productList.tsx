@@ -20,7 +20,9 @@ import {
 } from '../inputs/filterInputs'
 import { useNavigate } from 'react-router-dom'
 import { AverageRating } from '../Reviews'
+
 // Define the ProductCard component which takes a product with metadata as a prop
+
 const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
     const navigate = useNavigate()
     // Filter ingredients based on specific keywords
@@ -181,6 +183,8 @@ const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
         </Card>
     )
 }
+
+// this is the ProductList component which displays the product cards
 
 const ProductList = () => {
     const products = useAppSelector((state) => state.product)
