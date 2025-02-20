@@ -1,4 +1,12 @@
-import { Product, ProductWithMetadata } from '../../types'
+import {
+    FoodForm,
+    Product,
+    ProductWithMetadata,
+    Filter,
+    Manufacturer,
+    Sensitivities,
+    Brands,
+} from '../../types'
 import { useAppSelector } from '../../store'
 import { Box } from '@mui/system'
 import {
@@ -11,7 +19,6 @@ import {
 } from '@mui/material'
 import { Header, Text } from '../../themes/styles/CommonPageStyles'
 import {
-    PriceSlider,
     BreedSelector,
     AgeSelector,
     WeightSelect,
@@ -20,6 +27,8 @@ import {
 } from '../inputs/filterInputs'
 import { useNavigate } from 'react-router-dom'
 import { AverageRating } from '../Reviews'
+import Filters from './filters'
+import { useState } from 'react'
 
 // Define the ProductCard component which takes a product with metadata as a prop
 
@@ -188,31 +197,40 @@ const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
 
 const ProductList = () => {
     const products = useAppSelector((state) => state.product)
+    const resellers = useAppSelector((state) => state.reseller)
+
+    const [filteredProducts, setFilteredProducts] = useState<
+        ProductWithMetadata[]
+    >([])
+
+    // handle the filter change, first filter the resellers based on the price range,
+    // then filter the products based on the filtered resellers
+    // finally all the other filters will be applied on the filtered products
+
+    const handleFilterChange = (filters: Filter) => {
+        const { price } = filters
+        const filtered = resellers.filter((reseller) => {
+            return (
+                reseller.sale_price >= price[0] &&
+                reseller.sale_price <= price[1]
+            )
+        })
+
+        console.log('filtered', filtered)
+
+        const priceRangeProducts = products.filter((product) => {
+            return filtered.find(
+                (reseller) => reseller.product_id === product.id
+            )
+        })
+
+        console.log('priceRangeProducts', priceRangeProducts)
+
+        setFilteredProducts(priceRangeProducts as ProductWithMetadata[])
+    }
 
     //These needs to be replaced with actual data
 
-    const manufacturers = [
-        'Mars Petcare',
-        'Purina',
-        "Hill's Science Diet",
-        'Royal Canin',
-        'Blue Buffalo',
-        'Wellness',
-        'Orijen',
-        'Acana',
-        'Taste of the Wild',
-        'PrimaPet',
-    ]
-    const brands = ['Brand A', 'Brand B', 'Brand C', 'Brand D']
-    console.log('products', products)
-    const foodForm = ['Wet', 'Dry']
-    const sensitivities = [
-        'Grain-Free',
-        'Gluten-Free',
-        'Dairy-Free',
-        'Soy-Free',
-        'Chicken-Free',
-    ]
     return (
         <Box sx={{ display: 'flex' }}>
             {/* Filters */}
@@ -231,19 +249,28 @@ const ProductList = () => {
                     height: '100%',
                 }}
             >
-                <PriceSlider />
+                <Filters onFilterChange={handleFilterChange} />
                 <BreedSelector />
                 <AgeSelector />
                 <WeightSelect />
 
                 <MultiCheckboxSelector
                     label="Sensityvity"
-                    values={sensitivities}
+                    values={Object.values(Sensitivities)}
                 />
-                <MultiCheckboxSelector label="foodForm" values={foodForm} />
+                <MultiCheckboxSelector
+                    label="foodForm"
+                    values={Object.values(FoodForm)}
+                />
 
-                <DropDownSelector label="Manufacturer" values={manufacturers} />
-                <DropDownSelector label="Brand" values={brands} />
+                <DropDownSelector
+                    label="Manufacturer"
+                    values={Object.values(Manufacturer)}
+                />
+                <DropDownSelector
+                    label="Brand"
+                    values={Object.values(Brands)}
+                />
             </Box>
             {/* Product Cards */}
             <Box
@@ -255,7 +282,7 @@ const ProductList = () => {
                     overflowY: 'auto',
                 }}
             >
-                {products.map((product: Product) => (
+                {filteredProducts.map((product: Product) => (
                     <ProductCard
                         key={product.id}
                         product={product as ProductWithMetadata}

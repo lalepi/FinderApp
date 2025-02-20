@@ -19,6 +19,39 @@ export enum Age {
     Senior = 'Senior',
 }
 
+export enum Manufacturer {
+    MarsPetcare = 'Mars Petcare',
+    Purina = 'Purina',
+    HillsScienceDiet = "Hill's Science Diet",
+    RoyalCanin = 'Royal Canin',
+    BlueBuffalo = 'Blue Buffalo',
+    Wellness = 'Wellness',
+    Orijen = 'Orijen',
+    Acana = 'Acana',
+    TasteOfTheWild = 'Taste of the Wild',
+    PrimaPet = 'PrimaPet',
+}
+
+export enum Sensitivities {
+    GrainFree = 'Grain-Free',
+    GlutenFree = 'Gluten-Free',
+    DairyFree = 'Dairy-Free',
+    SoyFree = 'Soy-Free',
+    ChickenFree = 'Chicken-Free',
+}
+
+export enum Brands {
+    BrandA = 'Brand A',
+    BrandB = 'Brand B',
+    BrandC = 'Brand C',
+    BrandD = 'Brand D',
+}
+
+export enum FoodForm {
+    Wet = 'Wet',
+    Dry = 'Dry',
+}
+
 //example of a type definition for a product
 
 export interface Product {
@@ -93,4 +126,8 @@ export interface Review {
     id?: string
     rating: number
     comment: string
+}
+
+export interface Filter {
+    price: number[]
 }

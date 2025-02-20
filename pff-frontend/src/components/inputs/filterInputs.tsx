@@ -21,11 +21,16 @@ import { useState } from 'react'
 import { MultiCheckboxProps, DropdownProps } from '../../types'
 import { Text, FilterHeader } from '../../themes/styles/CommonPageStyles'
 
-export const PriceSlider = () => {
-    const [value, setValue] = React.useState<number[]>([20, 37])
+interface PriceSliderProps {
+    onChange: (value: number[]) => void
+}
+
+export const PriceSlider: React.FC<PriceSliderProps> = ({ onChange }) => {
+    const [value, setValue] = React.useState<number[]>([0, 100])
     console.log('value', value)
     const handleChange = (event: Event, newValue: number | number[]) => {
         setValue(newValue as number[])
+        onChange(newValue as number[])
     }
 
     return (
