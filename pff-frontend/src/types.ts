@@ -106,14 +106,9 @@ export interface ProductWithRating extends Product {
 
 ///FILTERS///
 
-export type Breed = 'dog' | 'cat' | 'neither'
+export type Breed = 'dog' | 'cat' | 'all'
 
-export interface MultiCheckboxProps {
-    values: string[]
-    label: string
-}
-
-export interface DropdownProps {
+export interface GenericMenu {
     values: string[]
     label: string
 }
@@ -130,4 +125,14 @@ export interface Review {
 
 export interface Filter {
     price: number[]
+    breed: string
+    age: string
+    weight: string
+    sensitivity: string[]
+    foodForm: string[]
+    manufacturer: string
+    brand: string
 }
+
+//use the keys of Filters to make a union type of all the possible filter definitions
+export type FilterValue = Filter[keyof Filter]

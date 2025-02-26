@@ -97,12 +97,17 @@ class AdvancedResellersDataSimulator:
             "Calcium iodate", "Menadione sodium bisulfite complex (source of vitamin K)", "Folic acid", "Biotin"
         ]
 
+        # List of common allergens
+        self.common_allergens = ["Grain", "Soy", "Dairy", "Chicken", "Beef", "Fish"]
+
     # Read image filenames from the specified folder
         self.image_filenames = [f for f in os.listdir(image_folder) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
     # Method to generate product metadata
     def generate_product_metadata(self, product_id):
         pet_category = random.choice(self.pet_categories)
+        #randomly select 0-2 common allergens for each product and leave some of them without allergens
+        sensitivities = random.sample(self.common_allergens, random.randint(0, 2)) if random.random() > 0.15 else []
         return {
             "product_id": product_id,
             "brand": random.choice(self.brands),
@@ -111,7 +116,8 @@ class AdvancedResellersDataSimulator:
             "dietary_type": random.choice([
                 "Standard", "Weight Management", 
                 "Senior", "Puppy/Kitten"
-            ])
+            ]),
+            "sensitivities": sensitivities
         }
 
     # Method to generate a product
@@ -127,6 +133,24 @@ class AdvancedResellersDataSimulator:
             "moisture": f"{round(random.uniform(5, 12), 2)}%",
             "ash": f"{round(random.uniform(1, 8), 2)}%"
         }
+
+        product_metadata = self.generate_product_metadata(product_id)
+        sensitivities = product_metadata["sensitivities"]
+        
+           # Filter ingredients based on sensitivities
+        ingredients = random.sample(self.ingredients_list, 5) + random.sample(self.additional_ingredients, 10)
+        if "Grain" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient not in ["Brown Rice", "Barley", "Oats"]]
+        if "Soy" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient != "Soy"]
+        if "Dairy" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient != "Dairy"]
+        if "Chicken" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient != "Chicken"]
+        if "Beef" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient != "Beef"]
+        if "Fish" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient not in ["Salmon", "Fish Oil"]]
         
         return {
             "id": product_id,

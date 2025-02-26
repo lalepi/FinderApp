@@ -1,12 +1,4 @@
-import {
-    FoodForm,
-    Product,
-    ProductWithMetadata,
-    Filter,
-    Manufacturer,
-    Sensitivities,
-    Brands,
-} from '../../types'
+import { ProductWithMetadata, Filter, Manufacturer, Brands } from '../../types'
 import { useAppSelector } from '../../store'
 import { Box } from '@mui/system'
 import {
@@ -18,24 +10,15 @@ import {
     CardActionArea,
 } from '@mui/material'
 import { Header, Text } from '../../themes/styles/CommonPageStyles'
-import {
-    BreedSelector,
-    AgeSelector,
-    WeightSelect,
-    DropDownSelector,
-    MultiCheckboxSelector,
-} from '../inputs/filterInputs'
 import { useNavigate } from 'react-router-dom'
 import { AverageRating } from '../Reviews'
 import Filters from './filters'
 import { useState } from 'react'
-
 // Define the ProductCard component which takes a product with metadata as a prop
 
 const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
     const navigate = useNavigate()
     // Filter ingredients based on specific keywords
-    console.log('productList', product)
     const filteredIngredients = product.ingredients.filter((ingredient) => {
         return (
             ingredient.toLowerCase().includes('chicken') ||
@@ -196,7 +179,9 @@ const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
 // this is the ProductList component which displays the product cards
 
 const ProductList = () => {
-    const products = useAppSelector((state) => state.product)
+    const products = useAppSelector(
+        (state) => state.product as ProductWithMetadata[]
+    )
     const resellers = useAppSelector((state) => state.reseller)
 
     const [filteredProducts, setFilteredProducts] = useState<
@@ -208,15 +193,24 @@ const ProductList = () => {
     // finally all the other filters will be applied on the filtered products
 
     const handleFilterChange = (filters: Filter) => {
-        const { price } = filters
+        const {
+            price,
+            breed,
+            age,
+            weight,
+            sensitivity,
+            foodForm,
+            manufacturer,
+            brand,
+        } = filters
+        console.log('filters', filters)
+
         const filtered = resellers.filter((reseller) => {
             return (
                 reseller.sale_price >= price[0] &&
                 reseller.sale_price <= price[1]
             )
         })
-
-        console.log('filtered', filtered)
 
         const priceRangeProducts = products.filter((product) => {
             return filtered.find(
@@ -226,17 +220,34 @@ const ProductList = () => {
 
         console.log('priceRangeProducts', priceRangeProducts)
 
-        setFilteredProducts(priceRangeProducts as ProductWithMetadata[])
-    }
+        const otherFilters = priceRangeProducts.filter((product) => {
+            const breedType =
+                breed === 'all'
+                    ? product.product_metadata.pet_type.toLowerCase()
+                    : product.product_metadata.pet_type.toLowerCase() === breed
+            const weightType =
+                weight === 'all'
+                    ? product.product_metadata.pet_size.toLowerCase()
+                    : product.product_metadata.pet_size.toLowerCase() === weight
+            const ageType =
+                age === 'all'
+                    ? product.age.toLowerCase()
+                    : product.age.toLowerCase() === age
 
-    //These needs to be replaced with actual data
+            return breedType && ageType && weightType
+        })
+
+        console.log('otherFilters', otherFilters)
+
+        setFilteredProducts(otherFilters as ProductWithMetadata[])
+    }
 
     return (
         <Box sx={{ display: 'flex' }}>
             {/* Filters */}
             <Box
                 sx={{
-                    //display: 'flex',
+                    display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'flex-start',
                     justifyContent: 'flex-start',
@@ -245,32 +256,11 @@ const ProductList = () => {
                     border: 2,
                     borderRadius: 2,
                     boxShadow: 10,
-                    width: 310,
+                    width: 360,
                     height: '100%',
                 }}
             >
                 <Filters onFilterChange={handleFilterChange} />
-                <BreedSelector />
-                <AgeSelector />
-                <WeightSelect />
-
-                <MultiCheckboxSelector
-                    label="Sensityvity"
-                    values={Object.values(Sensitivities)}
-                />
-                <MultiCheckboxSelector
-                    label="foodForm"
-                    values={Object.values(FoodForm)}
-                />
-
-                <DropDownSelector
-                    label="Manufacturer"
-                    values={Object.values(Manufacturer)}
-                />
-                <DropDownSelector
-                    label="Brand"
-                    values={Object.values(Brands)}
-                />
             </Box>
             {/* Product Cards */}
             <Box
@@ -282,12 +272,25 @@ const ProductList = () => {
                     overflowY: 'auto',
                 }}
             >
-                {filteredProducts.map((product: Product) => (
-                    <ProductCard
-                        key={product.id}
-                        product={product as ProductWithMetadata}
-                    />
-                ))}
+                {filteredProducts.length === 0 ? (
+                    <Text
+                        sx={{
+                            fontSize: 25,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        No products found
+                    </Text>
+                ) : (
+                    filteredProducts.map((product: ProductWithMetadata) => (
+                        <ProductCard
+                            key={product.id}
+                            product={product as ProductWithMetadata}
+                        />
+                    ))
+                )}
             </Box>
         </Box>
     )
