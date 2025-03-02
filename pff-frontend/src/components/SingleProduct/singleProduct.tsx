@@ -8,18 +8,26 @@ import { Review } from '../../types'
 import { fetchProductById } from '../../reducers/productReducer'
 import { useAppDispatch } from '../../store'
 import { useParams } from 'react-router-dom'
-const SingleProduct = () => {
-    const { id } = useParams<{ id: string }>()
 
+//This component displays a single product with its details, resellers, and reviews
+
+const SingleProduct = () => {
+    // Get the dispatch function from the Redux store
     const dispatch = useAppDispatch()
 
+    // State to manage reviews
+    const [reviews, setReviews] = useState<Review[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
+
+    // Get the product ID from the URL params
+    const { id } = useParams<{ id: string }>()
+
+    // Fetch the product from the store
     const product = useAppSelector((state) =>
         state.product.find((product) => product.id === id)
-    ) as ProductWithMetadata | undefined
+    ) as ProductWithMetadata
+    // if product is not available from the store, fetch it from the backend
 
-    // State to manage reviews
-    const [reviews, setReviews] = useState<Review[]>(product?.reviews || [])
-    const [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
         const fetchProduct = async () => {
             if (!product && id) {
@@ -30,6 +38,7 @@ const SingleProduct = () => {
         fetchProduct()
     }, [dispatch, id, product])
 
+    // Set reviews when product is loaded
     useEffect(() => {
         if (product) {
             setReviews(product.reviews)
@@ -43,7 +52,7 @@ const SingleProduct = () => {
         (reseller: Reseller) => reseller.product_id === id
     )
 
-    // Function to handle adding a new review
+    // Function to handle adding a new review using the onAddReview callback
     const handleAddReview = (newReview: Review) => {
         setReviews([...reviews, newReview])
     }
@@ -53,120 +62,121 @@ const SingleProduct = () => {
 
     if (!product) {
         return <div>Product not found</div>
-    }
-    return (
-        <Box sx={{ padding: 2 }}>
-            <Header>
-                {product.name}
-                <Text
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        fontSize: 30,
-                    }}
-                >
-                    {'REVIEW'}
-                </Text>
-            </Header>
+    } else {
+        return (
+            <Box sx={{ padding: 2 }}>
+                <Header>
+                    {product.name}
+                    <Text
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            fontSize: 30,
+                        }}
+                    >
+                        {'REVIEW'}
+                    </Text>
+                </Header>
 
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 4 }}>
-                <Box sx={{ flex: 1 }}>
-                    <img
-                        src={`/testdata/assets/${product.image}`}
-                        alt={product.name}
-                        width="150"
-                        height="150"
-                    />
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 4 }}>
+                    <Box sx={{ flex: 1 }}>
+                        <img
+                            src={`/testdata/assets/${product.image}`}
+                            alt={product.name}
+                            width="150"
+                            height="150"
+                        />
 
-                    <List>
-                        <ListItem>
-                            {`Manufacturer: ${product.manufacturer}`}
-                        </ListItem>
-                        <ListItem>
-                            {`For ${product.age} ${product.product_metadata.pet_type}s`}
-                        </ListItem>
-                        <ListItem>
-                            {`Packaging sizes: ${product.size}`}
-                        </ListItem>
-                        <ListItem>
-                            {`Brand: ${product.product_metadata.brand}`}
-                        </ListItem>
-                        <Text>Main Ingredients:</Text>
-
-                        {product.ingredients.map((ingredient) => (
-                            <ListItem
-                                sx={{
-                                    padding: 0,
-                                    margin: 0,
-                                    fontSize: 13,
-                                }}
-                                key={ingredient}
-                            >
-                                {ingredient}
+                        <List>
+                            <ListItem>
+                                {`Manufacturer: ${product.manufacturer}`}
                             </ListItem>
-                        ))}
-                    </List>
-                </Box>
+                            <ListItem>
+                                {`For ${product.age} ${product.product_metadata.pet_type}s`}
+                            </ListItem>
+                            <ListItem>
+                                {`Packaging sizes: ${product.size}`}
+                            </ListItem>
+                            <ListItem>
+                                {`Brand: ${product.product_metadata.brand}`}
+                            </ListItem>
+                            <Text>Main Ingredients:</Text>
 
-                <Box sx={{ width: '50%' }}>
-                    <Header>{'RESELLERS'}</Header>
-                    <List dense={true} sx={{ padding: 0 }}>
-                        {productResellers.map((reseller) => (
-                            <ListItem
-                                sx={{
-                                    padding: 0,
-                                    margin: 0,
-                                }}
-                                disablePadding={true}
-                                disableGutters={true}
-                                divider={true}
-                                key={reseller.inventory_id}
-                            >
-                                <Box
+                            {product.ingredients.map((ingredient) => (
+                                <ListItem
                                     sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        width: '100%',
+                                        padding: 0,
+                                        margin: 0,
+                                        fontSize: 13,
                                     }}
+                                    key={ingredient}
                                 >
-                                    <Text
+                                    {ingredient}
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Box>
+
+                    <Box sx={{ width: '50%' }}>
+                        <Header>{'RESELLERS'}</Header>
+                        <List dense={true} sx={{ padding: 0 }}>
+                            {productResellers.map((reseller) => (
+                                <ListItem
+                                    sx={{
+                                        padding: 0,
+                                        margin: 0,
+                                    }}
+                                    disablePadding={true}
+                                    disableGutters={true}
+                                    divider={true}
+                                    key={reseller.inventory_id}
+                                >
+                                    <Box
                                         sx={{
-                                            margin: 1,
-                                            fontSize: 20,
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            width: '100%',
                                         }}
                                     >
-                                        {reseller.reseller_name}
-                                    </Text>
-                                </Box>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <Text
+                                        <Text
+                                            sx={{
+                                                margin: 1,
+                                                fontSize: 20,
+                                            }}
+                                        >
+                                            {reseller.reseller_name}
+                                        </Text>
+                                    </Box>
+                                    <Box
                                         sx={{
-                                            margin: 1,
-                                            fontSize: 20,
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            width: '100%',
                                         }}
-                                    >{`price: ${reseller.sale_price} €`}</Text>
-                                    <Text
-                                        sx={{
-                                            margin: 1,
-                                            fontSize: 20,
-                                        }}
-                                    >{`Link`}</Text>
-                                </Box>
-                            </ListItem>
-                        ))}
-                    </List>
+                                    >
+                                        <Text
+                                            sx={{
+                                                margin: 1,
+                                                fontSize: 20,
+                                            }}
+                                        >{`price: ${reseller.sale_price} €`}</Text>
+                                        <Text
+                                            sx={{
+                                                margin: 1,
+                                                fontSize: 20,
+                                            }}
+                                        >{`Link`}</Text>
+                                    </Box>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Box>
                 </Box>
+                <AddReview product={product} onAddReview={handleAddReview} />
+                <Reviews product={{ ...product, reviews }} />
             </Box>
-            <AddReview product={product} onAddReview={handleAddReview} />
-            <Reviews product={{ ...product, reviews }} />
-        </Box>
-    )
+        )
+    }
 }
 
 export default SingleProduct

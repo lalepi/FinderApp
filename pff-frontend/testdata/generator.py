@@ -47,7 +47,7 @@ class AdvancedResellersDataSimulator:
             {"name": "Pet Supermarket", "type": "Brick & Mortar", "regions": ["National"]},
             {"name": "Petland", "type": "Brick & Mortar", "regions": ["Local"]},
             {"name": "PetFlow", "type": "Online", "regions": ["National"]},
-               {"name": "Pet World", "type": "Brick & Mortar", "regions": ["Local"]},
+            {"name": "Pet World", "type": "Brick & Mortar", "regions": ["Local"]},
             {"name": "Pet Planet", "type": "Online", "regions": ["National"]},
             {"name": "Pet Universe", "type": "Multimarket", "regions": ["International"]},
             {"name": "Pet Galaxy", "type": "Brick & Mortar", "regions": ["National"]},
@@ -64,7 +64,47 @@ class AdvancedResellersDataSimulator:
             "Mars Petcare", "Purina", "Hill's Science Diet", 
             "Royal Canin", "Blue Buffalo", "Wellness", 
             "Orijen", "Acana", "Taste of the Wild", "PrimaPet",
+            "Nutro", "Iams", "Eukanuba", "Pedigree", "Cesar",
+            "Sheba", "Whiskas", "Friskies", "Fancy Feast", "Meow Mix",
+            "Natural Balance", "Nature's Logic", "Solid Gold", "Canidae", "Merrick",
+            "NutriSource", "Victor", "Zignature", "Fromm", "Earthborn Holistic"
         ]
+            
+
+        # List of manufacturers
+        self.manufacturers = [
+            "Nestle Purina PetCare", "Mars Petcare", "Hill's Pet Nutrition",
+            "Blue Buffalo", "WellPet", "Diamond Pet Foods",
+            "Spectrum Brands", "Central Garden & Pet", "Champion Petfoods",
+            "Nutro Products", "Big Heart Pet Brands", "Nature's Variety",
+            "Solid Gold Pet", "Canidae Pet Food", "Merrick Pet Care",
+            "NutriSource Pet Foods", "Midwestern Pet Foods", "Fromm Family Foods",
+            "Earthborn Holistic Pet Food", "Zignature Pet Food"
+    ]
+
+        self.manufacturer_to_brands = {
+            "Nestle Purina PetCare": ["Purina", "Friskies", "Fancy Feast"],
+            "Mars Petcare": ["Mars Petcare", "Royal Canin", "Pedigree", "Cesar", "Sheba", "Whiskas"],
+            "Hill's Pet Nutrition": ["Hill's Science Diet"],
+            "Blue Buffalo": ["Blue Buffalo"],
+            "WellPet": ["Wellness", "Natural Balance"],
+            "Diamond Pet Foods": ["Taste of the Wild", "NutriSource", "Victor"],
+            "Spectrum Brands": ["Iams", "Eukanuba"],
+            "Central Garden & Pet": ["PrimaPet", "Nature's Logic"],
+            "Champion Petfoods": ["Orijen", "Acana"],
+            "Nutro Products": ["Nutro"],
+            "Big Heart Pet Brands": ["Meow Mix"],
+            "Nature's Variety": ["Nature's Logic"],
+            "Solid Gold Pet": ["Solid Gold"],
+            "Canidae Pet Food": ["Canidae"],
+            "Merrick Pet Care": ["Merrick"],
+            "NutriSource Pet Foods": ["NutriSource"],
+            "Midwestern Pet Foods": ["Victor"],
+            "Fromm Family Foods": ["Fromm"],
+            "Earthborn Holistic Pet Food": ["Earthborn Holistic"],
+            "Zignature Pet Food": ["Zignature"]
+    }
+
 
         # List of pet categories with their sizes
         self.pet_categories = [
@@ -97,12 +137,17 @@ class AdvancedResellersDataSimulator:
             "Calcium iodate", "Menadione sodium bisulfite complex (source of vitamin K)", "Folic acid", "Biotin"
         ]
 
+        # List of common allergens
+        self.common_allergens = ["Grain", "Soy", "Dairy", "Chicken", "Beef", "Fish"]
+
     # Read image filenames from the specified folder
         self.image_filenames = [f for f in os.listdir(image_folder) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
     # Method to generate product metadata
     def generate_product_metadata(self, product_id):
         pet_category = random.choice(self.pet_categories)
+        #randomly select 0-2 common allergens for each product and leave some of them without allergens
+        sensitivities = random.sample(self.common_allergens, random.randint(0, 2)) if random.random() > 0.15 else []
         return {
             "product_id": product_id,
             "brand": random.choice(self.brands),
@@ -111,7 +156,8 @@ class AdvancedResellersDataSimulator:
             "dietary_type": random.choice([
                 "Standard", "Weight Management", 
                 "Senior", "Puppy/Kitten"
-            ])
+            ]),
+            "sensitivities": sensitivities
         }
 
     # Method to generate a product
@@ -127,14 +173,38 @@ class AdvancedResellersDataSimulator:
             "moisture": f"{round(random.uniform(5, 12), 2)}%",
             "ash": f"{round(random.uniform(1, 8), 2)}%"
         }
+
+        product_metadata = self.generate_product_metadata(product_id)
+        sensitivities = product_metadata["sensitivities"]
         
+           # Filter ingredients based on sensitivities
+        ingredients = random.sample(self.ingredients_list, 5) + random.sample(self.additional_ingredients, 10)
+        if "Grain" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient not in ["Brown Rice", "Barley", "Oats"]]
+        if "Soy" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient != "Soy"]
+        if "Dairy" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient != "Dairy"]
+        if "Chicken" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient != "Chicken"]
+        if "Beef" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient != "Beef"]
+        if "Fish" in sensitivities:
+            ingredients = [ingredient for ingredient in ingredients if ingredient not in ["Salmon", "Fish Oil"]]
+        
+
+        brand = product_metadata["brand"]
+        manufacturer = next((m for m, b in self.manufacturer_to_brands.items() if brand in b), None)
+
+
+
         return {
             "id": product_id,
             "name": self.fake.word().capitalize() + " Pet Food",
-            "manufacturer": random.choice(self.brands),
-            "ingredients": random.sample(self.ingredients_list, 5) + random.sample(self.additional_ingredients, 10),
+            "manufacturer": manufacturer,
+            "ingredients": ingredients,
             "nutrients": nutrients,
-            "product_metadata": self.generate_product_metadata(product_id),
+            "product_metadata": product_metadata,
             "size": random.choice(["1kg", "2kg", "10kg", "15kg"]),
             "age": random.choice(["Puppy", "Adult", "Senior"]),
             "image": random.choice(self.image_filenames), # Generate a random image
