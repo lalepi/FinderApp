@@ -2,7 +2,7 @@ import * as React from 'react'
 import { FilterSlider } from '../../themes/styles/Buttons'
 import dogImage from '../../assets/dog_selector.png'
 import catImage from '../../assets/cat_selector.png'
-import { Breed, GenericMenu } from '../../types'
+import { Breed, GenericMenu, Weight, WeightValue } from '../../types'
 import theme from '../../themes/Theme'
 import {
     FormControl,
@@ -16,29 +16,35 @@ import {
     SelectChangeEvent,
     Checkbox,
     Grid2,
+    ListItemText,
 } from '@mui/material'
-import { useState } from 'react'
 import { Text, FilterHeader } from '../../themes/styles/CommonPageStyles'
 
 interface NumericArrayFilterProps {
+    value: number[]
     onChange: (value: number[]) => void
 }
 
 interface StringFilterProps {
+    value: string
     onChange: (value: string) => void
 }
 
 interface StringArrayFilterProps {
+    values: string[]
     onChange: (value: string[]) => void
 }
 
+// interface GenericFilterProps {
+//     value: FilterValue
+//     onChange: (value: FilterValue) => void
+// }
+
 export const PriceSlider: React.FC<NumericArrayFilterProps> = ({
     onChange,
+    value,
 }) => {
-    const [value, setValue] = React.useState<number[]>([0, 100])
-
     const handleChange = (event: Event, newValue: number | number[]) => {
-        setValue(newValue as number[])
         onChange(newValue as number[])
     }
 
@@ -69,12 +75,12 @@ export const PriceSlider: React.FC<NumericArrayFilterProps> = ({
     )
 }
 
-export const BreedSelector: React.FC<StringFilterProps> = ({ onChange }) => {
-    const [Breed, setBreed] = React.useState<Breed>('all')
-    console.log('Breed', Breed)
-    const handleBreedChange = (breed: Breed) => {
-        setBreed(breed as Breed)
-        onChange(breed as Breed)
+export const BreedSelector: React.FC<StringFilterProps> = ({
+    onChange,
+    value,
+}) => {
+    const handleBreedChange = (value: Breed) => {
+        onChange(value as Breed)
     }
 
     return (
@@ -89,7 +95,7 @@ export const BreedSelector: React.FC<StringFilterProps> = ({ onChange }) => {
                         position: 'relative',
                         borderRadius: '50%',
                         backgroundColor:
-                            Breed === 'dog'
+                            value === 'dog'
                                 ? theme.palette.button.secondaryBackground
                                 : 'transparent',
                         padding: 0,
@@ -110,7 +116,7 @@ export const BreedSelector: React.FC<StringFilterProps> = ({ onChange }) => {
                         position: 'relative',
                         borderRadius: '50%',
                         backgroundColor:
-                            Breed === 'cat'
+                            value === 'cat'
                                 ? theme.palette.button.secondaryBackground
                                 : 'transparent',
                         padding: 0,
@@ -129,11 +135,11 @@ export const BreedSelector: React.FC<StringFilterProps> = ({ onChange }) => {
     )
 }
 
-export const AgeSelector: React.FC<StringFilterProps> = ({ onChange }) => {
-    const [age, setAge] = React.useState('all')
-    console.log('age', age)
+export const AgeSelector: React.FC<StringFilterProps> = ({
+    onChange,
+    value,
+}) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAge((event.target as HTMLInputElement).value)
         onChange((event.target as HTMLInputElement).value)
     }
 
@@ -145,7 +151,7 @@ export const AgeSelector: React.FC<StringFilterProps> = ({ onChange }) => {
                 row
                 aria-labelledby="Age selector group"
                 name="Age selector group"
-                value={age}
+                value={value}
                 onChange={handleChange}
             >
                 <FormControlLabel
@@ -217,55 +223,65 @@ export const AgeSelector: React.FC<StringFilterProps> = ({ onChange }) => {
     )
 }
 
-export const WeightSelect: React.FC<StringFilterProps> = ({ onChange }) => {
-    const [weight, setWeight] = React.useState('all')
-    console.log('weight', weight)
-    const handleChange = (event: SelectChangeEvent) => {
-        setWeight(event.target.value as string)
-        onChange(event.target.value as string)
+//use enum to define the weight options
+const weightOptions = {
+    [Weight.Small]: '0-10 Kg',
+    [Weight.Medium]: '10-20 Kg',
+    [Weight.Large]: '> 20 Kg',
+}
+
+// use the weightOptions object to map the values of the weight filter
+// WeightSelect component is a wrapper for the DropDownSelector component
+
+export const WeightSelect: React.FC<StringArrayFilterProps> = ({
+    onChange,
+    values,
+}) => {
+    const handleWeightChange = (value: string[]) => {
+        const mappedValues = value
+            .map((val) => {
+                //find the key of the weightOptions object that matches the value
+                const enumKey = Object.keys(weightOptions).find(
+                    (key) => weightOptions[key as Weight] === val
+                )
+                //return the key as the weight value
+                return enumKey as Weight
+            })
+            //filter out any undefined values
+            .filter((val) => val !== undefined) as WeightValue[]
+        if (mappedValues.length === 0) {
+            mappedValues.push('all')
+        }
+        onChange(mappedValues)
     }
 
+    const selectedWeightValues =
+        values.length === 0
+            ? ['all']
+            : values.map((val) => weightOptions[val as Weight] || 'all')
+
     return (
-        <Box>
-            <FilterHeader>Pet size</FilterHeader>
-
-            <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    value={weight}
-                    onChange={handleChange}
-                >
-                    <MenuItem value="all">{<Text>All</Text>}</MenuItem>
-
-                    <MenuItem value="small">{<Text>0-10 Kg</Text>}</MenuItem>
-                    <MenuItem value="medium">{<Text>10-20 Kg</Text>}</MenuItem>
-                    <MenuItem value="large">
-                        {<Text>{'>'} 20 Kg</Text>}
-                    </MenuItem>
-                </Select>
-            </FormControl>
-        </Box>
+        <DropDownSelector
+            label="Weight"
+            values={Object.values(weightOptions)}
+            selectedValues={selectedWeightValues}
+            onChange={handleWeightChange}
+        />
     )
 }
 
 export const MultiCheckboxSelector: React.FC<
     GenericMenu & StringArrayFilterProps
-> = ({ values, label, onChange }) => {
-    const [selectedValues, setSelectedValues] = useState<string[]>([])
-
+> = ({ values, label, selectedValues, onChange }) => {
     const handleCheckboxChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         const { name, checked } = event.target
 
-        setSelectedValues((previous) => {
-            const currentlyChecked = checked
-                ? [...previous, name]
-                : previous.filter((value) => value !== name)
-            onChange(currentlyChecked)
-            return currentlyChecked
-        })
+        const currentlyChecked = checked
+            ? [...selectedValues, name]
+            : selectedValues.filter((value) => value !== name)
+        onChange(currentlyChecked)
     }
 
     return (
@@ -299,34 +315,61 @@ export const MultiCheckboxSelector: React.FC<
     )
 }
 
-export const DropDownSelector: React.FC<GenericMenu & StringFilterProps> = ({
-    values,
-    label,
-    onChange,
-}) => {
-    const [selectedValue, setSelectedValue] = useState<string>('')
+export const DropDownSelector: React.FC<
+    GenericMenu & StringArrayFilterProps
+> = ({ values, label, selectedValues, onChange }) => {
+    //use the SelectChangeEvent type to get the value of the selected item,
+    // and ensure that the type of the value is the same as the selectedValue
+    const handleChange = (event: SelectChangeEvent<typeof selectedValues>) => {
+        const { value } = event.target
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setSelectedValue(event.target.value as string)
-        onChange(event.target.value as string)
+        //check if the value is a string, if it is, split it into an array, otherwise use the value as is
+        console.log('value', value)
+
+        let currentValue = typeof value === 'string' ? value.split(',') : value
+
+        // Remove "all" if any other option is selected
+        if (currentValue.includes('all') && currentValue.length > 1) {
+            currentValue = currentValue.filter((val) => val !== 'all')
+        }
+
+        // If no options are selected, add "all"
+        if (currentValue.length === 0) {
+            currentValue = ['all']
+        }
+
+        onChange(currentValue)
     }
     return (
         <Box>
             <FilterHeader>{label}</FilterHeader>
-            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <FormControl sx={{ m: 1, maxWidth: 150 }} size="small">
                 <Select
                     labelId="brand-select-label"
                     id="brand-select"
-                    value={selectedValue}
+                    multiple
+                    value={selectedValues}
                     onChange={handleChange}
-                    displayEmpty
+                    renderValue={(selected) =>
+                        selected.length === 0 ? 'all' : selected.join(', ')
+                    }
+                    sx={{ width: 200 }}
                 >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
                     {values.map((value) => (
                         <MenuItem key={value} value={value}>
-                            {<Text>{value}</Text>}
+                            <Checkbox
+                                sx={{
+                                    color: theme.palette.button
+                                        .primaryBackground,
+                                    '&.Mui-checked': {
+                                        color: theme.palette.button
+                                            .secondaryBackground,
+                                    },
+                                }}
+                                name={value}
+                                checked={selectedValues.includes(value)}
+                            />
+                            <ListItemText primary={value} />
                         </MenuItem>
                     ))}
                 </Select>

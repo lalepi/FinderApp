@@ -1,4 +1,4 @@
-import { ProductWithMetadata, Filter, Manufacturer, Brands } from '../../types'
+import { ProductWithMetadata, Filter, ProductWithAllInfo } from '../../types'
 import { useAppSelector } from '../../store'
 import { Box } from '@mui/system'
 import {
@@ -180,12 +180,12 @@ const ProductCard = ({ product }: { product: ProductWithMetadata }) => {
 
 const ProductList = () => {
     const products = useAppSelector(
-        (state) => state.product as ProductWithMetadata[]
+        (state) => state.product as ProductWithAllInfo[]
     )
     const resellers = useAppSelector((state) => state.reseller)
 
     const [filteredProducts, setFilteredProducts] = useState<
-        ProductWithMetadata[]
+        ProductWithAllInfo[]
     >([])
 
     // handle the filter change, first filter the resellers based on the price range,
@@ -203,7 +203,6 @@ const ProductList = () => {
             manufacturer,
             brand,
         } = filters
-        console.log('filters', filters)
 
         const filtered = resellers.filter((reseller) => {
             return (
@@ -220,26 +219,104 @@ const ProductList = () => {
 
         console.log('priceRangeProducts', priceRangeProducts)
 
+        // remove the '-Free' from the sensitivities
+        const normalizedSensitivities = sensitivity.map((sensitivity) =>
+            sensitivity.replace('-Free', '').toLowerCase()
+        )
+
+        //go through the products and filter them based on the filters, if any of the filters is 'all', or returns 'false' then it will be ignored
         const otherFilters = priceRangeProducts.filter((product) => {
+            // Check if the breed, age, and weight filters are set to 'all'. If they are, return true.
+            // else, check if the product's breed, age, and weight match the filter values.
             const breedType =
                 breed === 'all'
-                    ? product.product_metadata.pet_type.toLowerCase()
+                    ? true
                     : product.product_metadata.pet_type.toLowerCase() === breed
-            const weightType =
-                weight === 'all'
-                    ? product.product_metadata.pet_size.toLowerCase()
-                    : product.product_metadata.pet_size.toLowerCase() === weight
-            const ageType =
-                age === 'all'
-                    ? product.age.toLowerCase()
-                    : product.age.toLowerCase() === age
 
-            return breedType && ageType && weightType
+            const ageType =
+                age === 'all' ? true : product.age.toLowerCase() === age
+
+            // Check if the sensitivities array is empty. If it is, return true.
+            // Otherwise, check if the product's sensitivities array or ingredients array contains any of the activated sensitivities or part of the sensitivities string.
+            // The `every` method is used to ensure that none of the product's sensitivities or ingredients contain the normalized sensitivity filter values.
+            // If any sensitivity or ingredient contains a part of the normalized sensitivity filter values, the product will be excluded from the filtered results.
+
+            const sensitivityType =
+                sensitivity.length === 0
+                    ? true
+                    : product.product_metadata.sensitivities.every(
+                          (sensitivity) =>
+                              !normalizedSensitivities.some(
+                                  (partOfSensitivity) =>
+                                      sensitivity
+                                          .toLowerCase()
+                                          .includes(partOfSensitivity)
+                              )
+                      ) &&
+                      product.ingredients.every(
+                          (ingredient) =>
+                              !normalizedSensitivities.some(
+                                  (partOfIngredient) =>
+                                      ingredient
+                                          .toLowerCase()
+                                          .includes(partOfIngredient)
+                              )
+                      )
+
+            //The moisture content of the product is normalized by removing the '%' sign and converting it to a number.
+            const normalizedMoisture: number = parseFloat(
+                product.nutrients.moisture.replace('%', '')
+            )
+
+            // check if the wet food form is selected and the moisture content is more than 10%
+            const foodFormType =
+                foodForm.length === 0
+                    ? true
+                    : foodForm.some(
+                          (form) =>
+                              form.toLowerCase().includes('wet') &&
+                              normalizedMoisture > 10.0
+                      )
+
+            //function to handle the multi-select filters
+            const multiSelectType = (filter: string[], product: string) => {
+                return filter.length === 1 && filter[0] === 'all'
+                    ? true
+                    : filter.some(
+                          (selected) =>
+                              selected.toLowerCase() === product.toLowerCase()
+                      )
+            }
+
+            const weightType = multiSelectType(
+                weight,
+                product.product_metadata.pet_size
+            )
+
+            const manufacturerTypes = multiSelectType(
+                manufacturer,
+                product.manufacturer
+            )
+
+            const brandTypes = multiSelectType(
+                brand,
+                product.product_metadata.brand
+            )
+
+            return (
+                breedType &&
+                ageType &&
+                weightType &&
+                sensitivityType &&
+                foodFormType &&
+                manufacturerTypes &&
+                brandTypes
+            )
         })
 
         console.log('otherFilters', otherFilters)
 
-        setFilteredProducts(otherFilters as ProductWithMetadata[])
+        setFilteredProducts(otherFilters as ProductWithAllInfo[])
     }
 
     return (
@@ -260,7 +337,10 @@ const ProductList = () => {
                     height: '100%',
                 }}
             >
-                <Filters onFilterChange={handleFilterChange} />
+                <Filters
+                    onFilterChange={handleFilterChange}
+                    products={products}
+                />
             </Box>
             {/* Product Cards */}
             <Box
