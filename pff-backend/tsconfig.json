@@ -16,11 +16,14 @@
         "noEmit": true,
         "jsx": "react-jsx",
 
+        "allowImportingTsExtensions": true /* Allow importing .ts files without specifying their extensions. */,
+
         "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,
         "noUnusedLocals": true /* Enable error reporting when local variables aren't read. */,
         "noUnusedParameters": true /* Raise an error when a function parameter isn't read. */,
         "noImplicitReturns": true /* Enable error reporting for codepaths that do not explicitly return in a function. */,
         "noFallthroughCasesInSwitch": true /* Enable error reporting for fallthrough cases in switch statements. */
     },
-    "include": ["src"]
+    "include": ["src/**/*.ts", "src/utils", "src/index.ts", "src/app.ts"],
+    "exclude": ["node_modules"]
 }

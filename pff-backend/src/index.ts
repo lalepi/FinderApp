@@ -1,11 +1,7 @@
-import http from 'http'
+import app from './app.ts'
+import config from './utils/config.ts'
+import logger from './utils/logger.ts'
 
-const app = http.createServer((request, response) => {
-    response.writeHead(200, { 'Content-Type': 'text/plain' })
-    response.end('Hello World')
+app.listen(config.PORT, () => {
+    logger.info(`Server running on port ${config.PORT}` as string)
 })
-
-const PORT = 3001
-app.listen(PORT)
-
-console.log(`Server running on port ${PORT}`)
