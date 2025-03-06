@@ -14,6 +14,10 @@ dist-ssr
 
 .env
 
+/mongo
+
+
+
 pff-frontend/testdata/*
 
 !pff-frontend/testdata/generator.py
