@@ -13,13 +13,14 @@ import mongoose from 'mongoose'
  * @returns `true` if the email is valid, otherwise `false`.
  */
 
+//check if email is valid
 const validateEmail = (email: string) => {
     const requirements = /^.+@(?:[\w-]+\.)+\w+$/
     return requirements.test(email)
 }
 
 const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
     email: {
         type: String,
         required: [true, 'An email is required'],
@@ -27,6 +28,7 @@ const userSchema = new mongoose.Schema({
         minlength: 8,
         unique: true,
     },
+    passwordHash: { type: String, required: true },
 })
 
 // Modify object before JSON serialization, remove _id and __v and add id, to make it more user-friendly
@@ -35,7 +37,7 @@ userSchema.set('toJSON', {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v
-        // the passwordHash should not be revealed
+        // the passwordHash should not be revealed so it is deleted from the object
         delete returnedObject.passwordHash
     },
 })

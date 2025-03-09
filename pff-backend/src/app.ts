@@ -1,19 +1,20 @@
 import 'express-async-errors'
 import express, { Express } from 'express'
 import mongoose from 'mongoose'
-import configi from './utils/config'
+import config from './utils/config'
 import logger from './utils/logger'
 import usersRouter from './controllers/users'
+import loginRouter from './controllers/login'
 import * as middleware from './utils/middleware'
 import cors from 'cors'
 
 const app: Express = express()
 
-logger.info('connecting to', configi.MONGODB_URI)
+logger.info('connecting to', config.MONGODB_URI)
 mongoose.set('strictQuery', false)
 const connectToDatabase = async () => {
     try {
-        await mongoose.connect(configi.MONGODB_URI)
+        await mongoose.connect(config.MONGODB_URI)
         logger.info('connected to MongoDB')
     } catch (error) {
         logger.error('error connection to MongoDB:', (error as Error).message)
@@ -32,9 +33,14 @@ app.use(express.static('build'))
 // Routes
 app.use('/Users', usersRouter)
 
+//use the tokenExtractor middleware for the login route
+app.use('/login', middleware.tokenExtractor, loginRouter)
+
 //Middlewares
+
 //handle unknown endpoints first
 app.use(middleware.unknownEndpoint)
+
 //handle errors
 app.use(middleware.errorHandler)
 

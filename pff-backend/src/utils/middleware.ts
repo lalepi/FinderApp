@@ -1,5 +1,11 @@
 import logger from './logger'
-
+import User from '../models/user'
+interface CustomRequest extends Request {
+    token?: string
+    user?: any
+}
+import jwt from 'jsonwebtoken'
+import config from './config'
 // This import statement was not working for some reason
 import { Request, Response, NextFunction } from 'express'
 //so make this .js file instead of .ts file
@@ -8,12 +14,8 @@ const unknownEndpoint = (_request: Request, response: Response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
-interface CustomError extends Error {
-    code?: number
-}
-
 const errorHandler = (
-    error: CustomError,
+    error: Error,
     _request: Request,
     response: Response,
     next: NextFunction
@@ -29,10 +31,34 @@ const errorHandler = (
             .json({ error: 'Email address already exists' })
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({ error: error.message })
+    } else if (error.name === 'JsonWebTokenError') {
+        return response.status(401).json({ error: 'invalid token' })
+    } else if (error.name === 'TokenExpiredError') {
+        return response.status(401).json({
+            error: 'token expired',
+        })
     } else {
         response.status(500).json({ error: 'Internal Server Error' })
     }
     next(error)
 }
 
-export { errorHandler, unknownEndpoint }
+const tokenExtractor = (
+    request: CustomRequest,
+    response: Response,
+    next: NextFunction
+) => {
+    //Get the authorization header from the request
+    const authorization = request.get('authorization')
+
+    //If the authorization header exists and starts with 'bearer ',
+    //set the token property of the request object to the token
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        request.token = authorization.substring(7)
+        next()
+    } else {
+        next()
+    }
+}
+
+export { errorHandler, unknownEndpoint, tokenExtractor }
