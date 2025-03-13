@@ -1,13 +1,12 @@
 import logger from './logger'
-import User from '../models/user'
+
 interface CustomRequest extends Request {
     token?: string
-    user?: any
 }
-import jwt from 'jsonwebtoken'
-import config from './config'
+
 // This import statement was not working for some reason
 import { Request, Response, NextFunction } from 'express'
+import { request } from 'http'
 //so make this .js file instead of .ts file
 import { MongoError } from 'mongodb'
 const unknownEndpoint = (_request: Request, response: Response) => {
@@ -45,7 +44,7 @@ const errorHandler = (
 
 const tokenExtractor = (
     request: CustomRequest,
-    response: Response,
+    _response: Response,
     next: NextFunction
 ) => {
     //Get the authorization header from the request

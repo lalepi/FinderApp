@@ -1,11 +1,17 @@
 import mongoose from 'mongoose'
 import basicUserSchema from './basicUser'
 
-//user schema as a subclass of basicUserSchema
-const userSchema = new mongoose.Schema(basicUserSchema.obj)
+// Retailer schema as a subclass of basicUserSchema
+const retailerSchema = new mongoose.Schema(basicUserSchema.obj)
+
+retailerSchema.add({
+    storeName: { type: String, required: true },
+    address: { type: String, required: true },
+    phone: { type: Number, required: true, minlength: 10 },
+})
 
 // Modify object before JSON serialization, remove _id and __v and add id, to make it more user-friendly
-userSchema.set('toJSON', {
+retailerSchema.set('toJSON', {
     transform: (_, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
@@ -15,6 +21,6 @@ userSchema.set('toJSON', {
     },
 })
 
-const User = mongoose.model('User', userSchema)
+const Retailer = mongoose.model('Retailer', retailerSchema)
 
-export default User
+export default Retailer
