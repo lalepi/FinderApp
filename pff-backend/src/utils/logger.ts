@@ -2,13 +2,13 @@
 //if the environment is not test, to see the logs in production
 
 const info = (...params: string[]) => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV) {
         console.log(...params)
     }
 }
 
 const error = (...params: string[]) => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV) {
         console.error(...params)
     }
 }

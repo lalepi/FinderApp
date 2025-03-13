@@ -1,68 +1,19 @@
-import express from 'express'
+import 'express-async-errors'
+import express, { Express } from 'express'
 import mongoose from 'mongoose'
-import config from './utils/config.ts'
-import logger from './utils/logger.ts'
-import { Router } from 'express'
+import config from './utils/config'
+import logger from './utils/logger'
+import usersRouter from './controllers/users'
+import retailerRouter from './controllers/retailers'
+import loginRouter from './controllers/login'
+import registerRouter from './controllers/register'
+import * as middleware from './utils/middleware'
+import cors from 'cors'
 
-/// move all these to correct files ///
-const usersRouter = Router()
+const app: Express = express()
 
-const app = express()
-
-// Middleware to parse JSON requests
-app.use(express.json())
-
-app.get('/', (req, res) => {
-    res.send('Hello World')
-})
-
-///CREATE ROUTER
-
-const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-})
-
-userSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-        // the passwordHash should not be revealed
-        delete returnedObject.passwordHash
-    },
-})
-
-const User = mongoose.model('User', userSchema)
-
-// Define Routes
-usersRouter.post('/', async (req, res) => {
-    try {
-        const { name, email } = req.body
-        const user = new User({ name, email })
-        const savedUser = await user.save()
-        res.status(201).json(savedUser)
-    } catch (error) {
-        logger.error('Error saving user:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
-    }
-})
-
-usersRouter.get('/', async (req, res) => {
-    try {
-        const users = await User.find()
-        res.json(users)
-    } catch (error) {
-        logger.error('Error fetching users:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
-    }
-})
-
-app.use('/Users', usersRouter)
-
-mongoose.set('strictQuery', false)
 logger.info('connecting to', config.MONGODB_URI)
-
+mongoose.set('strictQuery', false)
 const connectToDatabase = async () => {
     try {
         await mongoose.connect(config.MONGODB_URI)
@@ -72,6 +23,29 @@ const connectToDatabase = async () => {
     }
 }
 
+// Connect to MongoDB
 connectToDatabase()
+
+// Enable CORS,cross-origin resource sharing
+app.use(cors())
+// Middleware to parse JSON requests
+app.use(express.json())
+// Serve the static files from the React app
+app.use(express.static('build'))
+// Routes
+app.use('/users', usersRouter)
+app.use('/retailers', retailerRouter)
+
+//use the tokenExtractor middleware for the login route
+app.use('/login', middleware.tokenExtractor, loginRouter)
+app.use('/register', middleware.tokenExtractor, registerRouter)
+
+//Middlewares
+
+//handle unknown endpoints first
+app.use(middleware.unknownEndpoint)
+
+//handle errors
+app.use(middleware.errorHandler)
 
 export default app
