@@ -4,14 +4,17 @@ import bcrypt from 'bcrypt'
 import { Router } from 'express'
 import config from '../utils/config'
 import User from '../models/user'
+import Retailer from '../models/retailer'
 
 const loginRouter = Router()
 
 loginRouter.post('/', async (request: Request, response: Response) => {
     //Authenticate user
     const { username, password } = request.body
-
-    const user = await User.findOne({ username })
+    console.log('username', username)
+    const user =
+        (await User.findOne({ username })) ||
+        (await Retailer.findOne({ username }))
 
     console.log('user', user)
     console.log('password', password)

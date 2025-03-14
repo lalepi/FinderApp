@@ -25,9 +25,26 @@ const errorHandler = (
     }
     //If the error is a MongoDB error with code 11000, it is a duplicate key error, so return a 400 status code and more obvious error message
     else if ((error as MongoError).code === 11000) {
-        return response
-            .status(400)
-            .json({ error: 'Email address already exists' })
+        console.log('error', error)
+        if (error.message.includes('username')) {
+            return response
+                .status(400)
+                .json({ error: 'Username already exists' })
+        } else if (error.message.includes('email')) {
+            return response
+                .status(400)
+                .json({ error: 'Email address already exists' })
+        } else if (error.message.includes('storeName')) {
+            return response
+                .status(400)
+                .json({ error: 'Store name already exists' })
+        } else if (error.message.includes('phone')) {
+            return response
+                .status(400)
+                .json({ error: 'Phone number already exists' })
+        } else {
+            return response.status(400).json({ error: 'Duplicate key error' })
+        }
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({ error: error.message })
     } else if (error.name === 'JsonWebTokenError') {

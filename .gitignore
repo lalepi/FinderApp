@@ -13,10 +13,11 @@ dist-ssr
 *.local
 
 .env
+.env.test
 
 /mongo
 
-
+pff-backend/coverage/
 
 pff-frontend/testdata/*
 

@@ -36,8 +36,6 @@ registerRouter.post('/', async (request: Request, response: Response) => {
             const user = new User({ username, email, passwordHash })
             savedUser = await user.save()
         }
-        //save the user to the database
-        //  const savedUser = await user.save()
         response.status(201).json(savedUser)
     }
 })
