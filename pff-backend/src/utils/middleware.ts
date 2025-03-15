@@ -1,14 +1,16 @@
 import logger from './logger'
+import { Request, Response, NextFunction } from 'express'
+import { MongoError } from 'mongodb'
+import jwt from 'jsonwebtoken'
+import config from '../utils/config'
+import User from '../models/user'
 
 interface CustomRequest extends Request {
     token?: string
+    user?: string
+    isAdmin?: boolean
 }
 
-// This import statement was not working for some reason
-import { Request, Response, NextFunction } from 'express'
-import { request } from 'http'
-//so make this .js file instead of .ts file
-import { MongoError } from 'mongodb'
 const unknownEndpoint = (_request: Request, response: Response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
@@ -59,7 +61,7 @@ const errorHandler = (
     next(error)
 }
 
-const tokenExtractor = (
+const tokenExtractor = async (
     request: CustomRequest,
     _response: Response,
     next: NextFunction
@@ -71,10 +73,49 @@ const tokenExtractor = (
     //set the token property of the request object to the token
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
         request.token = authorization.substring(7)
-        next()
+
+        //try catch to handle the jwt.verify method
+        try {
+            // Verify the token
+            const decodedToken = jwt.verify(
+                request.token,
+                config.ACCESS_TOKEN_SECRET
+            ) as {
+                id: string
+                username: string
+                isAdmin: boolean
+            }
+
+            // Attach the user to the request object
+            const user = await User.findById(decodedToken.id)
+            if (user) {
+                request.user = user.id
+            }
+
+            // Attach the isAdmin flag to the request object
+            request.isAdmin = decodedToken.isAdmin || false
+
+            next()
+        } catch (error) {
+            next(error) // Pass the error to the errorHandler
+        }
     } else {
-        next()
+        const error = new Error('token missing or improperly formatted')
+        error.name = 'JsonWebTokenError'
+        next(error) // Pass the error to the errorHandler middleware
     }
 }
 
-export { errorHandler, unknownEndpoint, tokenExtractor }
+//to check if the user is an admin
+const adminCheck = (
+    request: CustomRequest,
+    response: Response,
+    next: NextFunction
+) => {
+    if (!request.isAdmin) {
+        return response.status(403).json({ error: 'access denied' })
+    }
+    next()
+}
+
+export { errorHandler, unknownEndpoint, tokenExtractor, adminCheck }

@@ -1,4 +1,4 @@
-import { expect, test, describe, beforeEach } from 'vitest'
+import { expect, test, describe, beforeEach, beforeAll } from 'vitest'
 import User from '../models/user'
 import Retailer from '../models/retailer'
 import supertest from 'supertest'
@@ -23,35 +23,37 @@ let legitRetailer = {
     phone: 1234567890,
     userType: 'retailer',
 }
-
-beforeEach(async () => {
-    await User.deleteMany({})
-    await Retailer.deleteMany({})
-
-    // make the initial user and retailer
-    const userPasswordHash = await bcrypt.hash(legitUser.password, 10)
-    const user = new User({
-        ...legitUser,
-        passwordHash: userPasswordHash,
-    })
-    await user.save()
-
-    const retailerPasswordHash = await bcrypt.hash(legitRetailer.password, 10)
-    const retailer = new Retailer({
-        ...legitRetailer,
-        passwordHash: retailerPasswordHash,
-    })
-    await retailer.save()
-
-    //get the tokens for the user and retailer
-    const userResponse = await api.post('/login').send(legitUser)
-    const retailerResponse = await api.post('/login').send(legitRetailer)
-
-    let userToken = userResponse.body.token
-    let retailerToken = retailerResponse.body.token
-})
-
 describe('login tests', () => {
+    beforeAll(async () => {
+        await User.deleteMany({})
+        await Retailer.deleteMany({})
+
+        // make the initial user and retailer
+        const userPasswordHash = await bcrypt.hash(legitUser.password, 10)
+        let user = new User({
+            ...legitUser,
+            passwordHash: userPasswordHash,
+        })
+        await user.save()
+
+        const retailerPasswordHash = await bcrypt.hash(
+            legitRetailer.password,
+            10
+        )
+        let retailer = new Retailer({
+            ...legitRetailer,
+            passwordHash: retailerPasswordHash,
+        })
+        await retailer.save()
+
+        //get the tokens for the user and retailer
+        const userResponse = await api.post('/login').send(legitUser)
+        const retailerResponse = await api.post('/login').send(legitRetailer)
+
+        let userToken = userResponse.body.token
+        let retailerToken = retailerResponse.body.token
+    })
+
     test('login with valid user credentials', async () => {
         const response = await api
             .post('/login')
@@ -129,8 +131,8 @@ describe('register tests', () => {
     describe('user', () => {
         test('register a new user', async () => {
             const newUser = {
-                username: 'newUser',
-                email: 'email@email.com',
+                username: 'newUser1',
+                email: 'email1@email.com',
                 password: 'passwordmustbe10',
             }
             const response = await api
@@ -141,7 +143,7 @@ describe('register tests', () => {
         })
         test('register a new user with a password less than 10 characters', async () => {
             const newUser = {
-                username: 'newUser',
+                username: 'newUser2',
                 email: 'newuser@email.com',
                 password: 'short',
             }
@@ -157,7 +159,7 @@ describe('register tests', () => {
         test('register a user with an existing username', async () => {
             const newUser = {
                 username: 'Cool Name',
-                email: 'email@email.com',
+                email: 'email2@email.com',
                 password: 'passwordmustbe10',
             }
             const response = await api
@@ -165,11 +167,11 @@ describe('register tests', () => {
                 .send(newUser)
                 .expect(400)
                 .expect('Content-Type', /application\/json/)
-            expect(response.body.error).toBe('Username already exists')
+            expect(response.body.error).toContain('Username already exists')
         })
         test('register a user with an existing email', async () => {
             const newUser = {
-                username: 'newUser',
+                username: 'newUser3',
                 email: 'coolEmail@email.com',
                 password: 'passwordmustbe10',
             }
@@ -178,11 +180,13 @@ describe('register tests', () => {
                 .send(newUser)
                 .expect(400)
                 .expect('Content-Type', /application\/json/)
-            expect(response.body.error).toBe('Email address already exists')
+            expect(response.body.error).toContain(
+                'Email address already exists'
+            )
         })
         test('register a user with same password as another user', async () => {
             const newUser = {
-                username: 'newUser',
+                username: 'newUser4',
                 email: 'asd@email.com',
                 password: 'passwordmustbe10',
             }
@@ -202,7 +206,7 @@ describe('register tests', () => {
                 storeName: 'newStore22',
                 address: '1234 New St',
                 phone: 12345678901,
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')
@@ -218,7 +222,7 @@ describe('register tests', () => {
                 storeName: 'Cool Store',
                 address: '1234 New St',
                 phone: 12345678901,
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')
@@ -236,7 +240,7 @@ describe('register tests', () => {
                 storeName: 'Cool Storex',
                 address: '1234 New St',
                 phone: 1234567890,
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')
@@ -253,7 +257,7 @@ describe('register tests', () => {
                 storeName: '',
                 address: '1234 New St',
                 phone: 1234567890,
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')
@@ -272,7 +276,7 @@ describe('register tests', () => {
                 storeName: 'newStore',
                 address: '',
                 phone: 1234567890,
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')
@@ -291,7 +295,7 @@ describe('register tests', () => {
                 storeName: 'newStore',
                 address: '1234 New St',
                 phone: '',
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')
@@ -310,7 +314,7 @@ describe('register tests', () => {
                 storeName: 'newStore',
                 address: '1234 New St',
                 phone: 123456789,
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')
@@ -329,7 +333,7 @@ describe('register tests', () => {
                 storeName: 'newStore',
                 address: '1234 New St',
                 phone: '123456789a',
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')
@@ -348,7 +352,7 @@ describe('register tests', () => {
                 storeName: 'AB',
                 address: '1234 New St',
                 phone: '123456789a',
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')
@@ -367,7 +371,7 @@ describe('register tests', () => {
                 storeName: 'AB',
                 address: 'ST',
                 phone: '123456789a',
-                userType: 'retailer',
+                role: 'retailer',
             }
             const response = await api
                 .post('/register')

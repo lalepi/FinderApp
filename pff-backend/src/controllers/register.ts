@@ -9,23 +9,23 @@ const registerRouter = Router()
 
 // Define Routes
 registerRouter.post('/', async (request: Request, response: Response) => {
-    const { username, email, password, userType, storeName, address, phone } =
+    const { username, email, password, role, storeName, address, phone } =
         request.body
     if (password.length < 10) {
         return response
             .status(400)
             .json({ error: 'Password must be at least 10 characters long' })
     } else {
-        // Hash the password
         const saltRounds = 10
         const passwordHash = await bcrypt.hash(password, saltRounds)
 
         // Create a new user depending on the type and with the hashed password
         let savedUser
-        if (userType === 'retailer') {
+        if (role === 'retailer') {
             const retailer = new Retailer({
                 username,
                 email,
+                role,
                 passwordHash,
                 storeName,
                 address,
@@ -33,7 +33,12 @@ registerRouter.post('/', async (request: Request, response: Response) => {
             })
             savedUser = await retailer.save()
         } else {
-            const user = new User({ username, email, passwordHash })
+            const user = new User({
+                username,
+                email,
+                passwordHash,
+                role: 'user',
+            })
             savedUser = await user.save()
         }
         response.status(201).json(savedUser)

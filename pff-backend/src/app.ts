@@ -9,6 +9,7 @@ import loginRouter from './controllers/login'
 import registerRouter from './controllers/register'
 import * as middleware from './utils/middleware'
 import cors from 'cors'
+import adminRouter from './controllers/admin'
 
 const app: Express = express()
 
@@ -37,9 +38,9 @@ app.use('/users', usersRouter)
 app.use('/retailers', retailerRouter)
 
 //use the tokenExtractor middleware for the login route
-app.use('/login', middleware.tokenExtractor, loginRouter)
-app.use('/register', middleware.tokenExtractor, registerRouter)
-
+app.use('/login', loginRouter)
+app.use('/register', registerRouter)
+app.use('/admin', middleware.tokenExtractor, middleware.adminCheck, adminRouter)
 //Middlewares
 
 //handle unknown endpoints first

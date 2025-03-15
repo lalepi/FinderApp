@@ -1,3 +1,4 @@
+import { getRoles } from '@testing-library/react'
 import mongoose from 'mongoose'
 
 /**
@@ -29,6 +30,16 @@ const basicUserSchema = new mongoose.Schema({
         unique: true,
     },
     passwordHash: { type: String, required: true },
+    role: {
+        type: String,
+        enum: ['user', 'retailer'], //define the roles
+        default: 'user',
+        required: true,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false, // Default is false (not an admin)
+    },
 })
 
 //this is the schema for a basic user that can be extended to create a retailer
