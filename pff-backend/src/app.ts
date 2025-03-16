@@ -7,7 +7,7 @@ import registerRouter from './controllers/register'
 import * as middleware from './utils/middleware'
 import cors from 'cors'
 import adminRouter from './controllers/admin'
-import productRouter from './controllers/product'
+import productDATARouter from './controllers/productDATA'
 
 const app: Express = express()
 
@@ -26,7 +26,7 @@ app.use('/login', loginRouter)
 app.use('/register', registerRouter)
 app.use('/admin', middleware.tokenExtractor, middleware.adminCheck, adminRouter)
 //Middlewares
-app.use('/products', productRouter)
+app.use('/', productDATARouter)
 //handle unknown endpoints first
 app.use(middleware.unknownEndpoint)
 
