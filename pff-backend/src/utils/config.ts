@@ -11,11 +11,14 @@ const MONGODB_URI =
         ? (process.env.MONGO_URI_TEST as string)
         : (process.env.MONGO_URI as string)
 
+const PRODUCT_DATABASE = process.env.MONGO_PRODUCT_DATA as string
+
 const config = {
     MONGODB_URI,
     PORT,
     ACCESS_TOKEN_SECRET,
     REFRESH_TOKEN_SECRET,
+    PRODUCT_DATABASE,
 }
 
 export default config

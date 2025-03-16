@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 import basicUserSchema from './basicUser'
+import { UserDbConnection } from '../utils/db'
+import { setToJSON } from '../utils/middleware'
 
 // Retailer schema as a subclass of basicUserSchema
 const retailerSchema = new mongoose.Schema(basicUserSchema.obj)
@@ -24,17 +26,11 @@ retailerSchema.add({
     },
 })
 
-// Modify object before JSON serialization, remove _id and __v and add id, to make it more user-friendly
-retailerSchema.set('toJSON', {
-    transform: (_, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-        // the passwordHash should not be revealed so it is deleted from the object
-        delete returnedObject.passwordHash
-    },
-})
+setToJSON(retailerSchema)
 
-const Retailer = mongoose.model('Retailer', retailerSchema)
+const { userDB } = UserDbConnection()
+
+// Use the userDB to create the User model
+const Retailer = userDB.model('Retailer', retailerSchema)
 
 export default Retailer

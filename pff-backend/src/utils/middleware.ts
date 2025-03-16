@@ -4,6 +4,7 @@ import { MongoError } from 'mongodb'
 import jwt from 'jsonwebtoken'
 import config from '../utils/config'
 import User from '../models/user'
+import mongoose from 'mongoose'
 
 interface CustomRequest extends Request {
     token?: string
@@ -118,4 +119,18 @@ const adminCheck = (
     next()
 }
 
-export { errorHandler, unknownEndpoint, tokenExtractor, adminCheck }
+const setToJSON = (schema: mongoose.Schema) => {
+    schema.set('toJSON', {
+        transform: (document, returnedObject) => {
+            // replace the _id with id
+            returnedObject.id = returnedObject._id.toString()
+            // Remove the _id and __v properties
+            delete returnedObject._id
+            delete returnedObject.__v
+            // the passwordHash should not be revealed so it is deleted from the object
+            delete returnedObject.passwordHash
+        },
+    })
+}
+
+export { errorHandler, unknownEndpoint, tokenExtractor, adminCheck, setToJSON }
