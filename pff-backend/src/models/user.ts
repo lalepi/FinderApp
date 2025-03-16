@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import basicUserSchema from './basicUser'
+import { UserDbConnection } from '../utils/db'
 
 //user schema as a subclass of basicUserSchema
 const userSchema = new mongoose.Schema(basicUserSchema.obj)
@@ -15,6 +16,8 @@ userSchema.set('toJSON', {
     },
 })
 
-const User = mongoose.model('User', userSchema)
+const { userDB } = UserDbConnection()
+
+const User = userDB.model('User', userSchema)
 
 export default User

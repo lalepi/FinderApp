@@ -4,7 +4,7 @@ import json
 import os
 from faker import Faker
 from datetime import datetime, timedelta
-
+from pymongo import MongoClient
 # Custom JSON encoder to handle datetime objects
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -26,14 +26,14 @@ class AdvancedResellersDataSimulator:
         self.image_folder = os.path.join(script_dir, image_folder)
 
         # List of resellers with their types and regions
-        self.resellers = [
+        self.retailers = [
             {"name": "Musti&mirri", "type": "Brick & Mortar", "regions": ["Skandinavia", "Local", "National"]},
             {"name": "Petenkoiratarvike", "type": "Online", "regions": ["National"]},
             {"name": "Zooplus", "type": "Online", "regions": ["National"]},
             {"name": "Puuilo", "type": "Brick & Mortar", "regions": ["Skandinavia", "Local", "National"]},
             {"name": "Bitiba", "type": "Multimarket", "regions": ["National"]},
             {"name": "Prisma", "type": "Independent", "regions": ["Local"]},
-             {"name": "PetSmart", "type": "Brick & Mortar", "regions": ["International"]},
+            {"name": "PetSmart", "type": "Brick & Mortar", "regions": ["International"]},
             {"name": "Petco", "type": "Brick & Mortar", "regions": ["International"]},
             {"name": "Chewy", "type": "Online", "regions": ["International"]},
             {"name": "Amazon", "type": "Online", "regions": ["Skandinavia"]},
@@ -221,8 +221,8 @@ class AdvancedResellersDataSimulator:
     def generate_reseller_inventory(self, product_metadata):
         inventory_data = []
          # Randomly select 1-20 resellers for each product
-        selected_resellers = random.sample(self.resellers, random.randint(1, 20))
-        for reseller in selected_resellers:
+        selected_retailers = random.sample(self.retailers, random.randint(1, 20))
+        for retailer in selected_retailers:
             # Complex inventory simulation
             stock_levels = {
                 "Brick & Mortar": (50, 500),
@@ -230,7 +230,7 @@ class AdvancedResellersDataSimulator:
                 "Multimarket": (100, 1000),
                 "Independent": (20, 200)
             }
-            stock_range = stock_levels[reseller["type"]]
+            stock_range = stock_levels[retailer["type"]]
             stock_quantity = random.randint(stock_range[0], stock_range[1])
             # Dynamic pricing logic
             base_price = round(random.uniform(20, 80), 2)
@@ -246,8 +246,8 @@ class AdvancedResellersDataSimulator:
             inventory_entry = {
                 "inventory_id": str(uuid.uuid4()),
                 "product_id": product_metadata["product_id"],
-                "reseller_name": reseller["name"],
-                "regions": reseller["regions"],
+                "retailer_name": retailer["name"],
+                "regions": retailer["regions"],
                 "stock_quantity": stock_quantity,
                 "base_price": base_price,
                 "sale_price": sale_price,
@@ -266,7 +266,7 @@ class AdvancedResellersDataSimulator:
             monthly_sales = [
                 {
                     "product_id": entry["product_id"],
-                    "reseller_name": entry["reseller_name"],
+                    "retailer_name": entry["retailer_name"],
                     "month": (datetime.now() - timedelta(days=30*i)).strftime("%Y-%m"),
                     "total_units_sold": random.randint(10, entry["stock_quantity"]),
                     "total_revenue": round(random.uniform(100, 5000), 2)
@@ -300,12 +300,29 @@ class AdvancedResellersDataSimulator:
         return data
 
     # Method to save the dataset to a JSON file
-    def save_to_json(self, filename='Product.json'):
+    # def save_to_json(self, filename='Product.json'):
+    #     data = self.generate_dataset()
+    #     with open(filename, 'w') as f:
+    #         json.dump(data, f, indent=2, cls=DateTimeEncoder)
+
+    # Method to push data to MongoDB
+    def push_to_mongo(self, db_name='ProductDATA', host='localhost', port=27018):
+        # Connect to MongoDB
+        client = MongoClient(host, port)
+        db = client[db_name]
+
+        # Generate the dataset
         data = self.generate_dataset()
-        with open(filename, 'w') as f:
-            json.dump(data, f, indent=2, cls=DateTimeEncoder)
+
+        # Insert data into collections
+        db.products.insert_many(data["products"])
+        db.inventory.insert_many(data["inventory_data"])
+        db.sales_history.insert_many(data["sales_history"])
+        db.manufacturers.insert_many(data["manufacturers"])
+
+        print("Data successfully pushed to MongoDB!")
 
 # Example usage
 if __name__ == "__main__":
-    simulator = AdvancedResellersDataSimulator(num_products=100)
-    simulator.save_to_json('Product.json')
+    simulator = AdvancedResellersDataSimulator(num_products=1000)
+    simulator.push_to_mongo()

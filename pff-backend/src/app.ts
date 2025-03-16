@@ -1,8 +1,5 @@
 import 'express-async-errors'
 import express, { Express } from 'express'
-import mongoose from 'mongoose'
-import config from './utils/config'
-import logger from './utils/logger'
 import usersRouter from './controllers/users'
 import retailerRouter from './controllers/retailers'
 import loginRouter from './controllers/login'
@@ -10,22 +7,9 @@ import registerRouter from './controllers/register'
 import * as middleware from './utils/middleware'
 import cors from 'cors'
 import adminRouter from './controllers/admin'
+import productRouter from './controllers/product'
 
 const app: Express = express()
-
-logger.info('connecting to', config.MONGODB_URI)
-mongoose.set('strictQuery', false)
-const connectToDatabase = async () => {
-    try {
-        await mongoose.connect(config.MONGODB_URI)
-        logger.info('connected to MongoDB')
-    } catch (error) {
-        logger.error('error connection to MongoDB:', (error as Error).message)
-    }
-}
-
-// Connect to MongoDB
-connectToDatabase()
 
 // Enable CORS,cross-origin resource sharing
 app.use(cors())
@@ -42,7 +26,7 @@ app.use('/login', loginRouter)
 app.use('/register', registerRouter)
 app.use('/admin', middleware.tokenExtractor, middleware.adminCheck, adminRouter)
 //Middlewares
-
+app.use('/products', productRouter)
 //handle unknown endpoints first
 app.use(middleware.unknownEndpoint)
 
